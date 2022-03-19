@@ -11,6 +11,7 @@ import pickle
 
 import request
 import search
+import usercounter
 
 config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
@@ -130,6 +131,11 @@ params = {
 with open('cookiejar', 'wb') as f:
     pickle.dump(requestssession.cookies, f)
 
+def save_config_file():
+    with open ('config.ini', 'w') as configfile:
+        config.write(configfile)
+        configfile.close()
+
 def getrawpost(message_id):
     page = requestssession.get(f'https://{host}.ope.ee/suhtlus/api/posts/get/{message_id}', headers=headers, params=params, cookies=cookies, verify=True)
     return page
@@ -165,6 +171,12 @@ def open_chats():
     get_chatpage()
     choose_message()
 
+def update_usercount():
+    count = usercounter.updateusercount()
+    print(f'Current usercount is {count}')
+    config['host']['usercount'] = str(count)
+    save_config_file()
+
 def update_user_card_url():
     chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
 
@@ -172,9 +184,8 @@ def update_user_card_url():
     meta_config = parsedinput.head.find('meta', attrs={'name':"suhtlus:config"}).get('content')
     user_card_url = str(json.loads(meta_config)['user_card_url'])
     config['user']['user_card_url'] = user_card_url
-    with open ('config.ini', 'w') as configfile:
-        config.write(configfile)
-        configfile.close()
+    save_config_file()
+
 # UID = {
 #     'USERID' : '9999999999'
 # }
@@ -215,11 +226,6 @@ def submit_draft():
     response = requests.post('https://tamme.ope.ee/suhtlus/api/posts/edit', headers=headers, params=params, cookies=cookies, data=data, verify=True)
     print(response)
 
-
-
-
-
-
 while True:
     print('''
     1) Päevik
@@ -238,12 +244,13 @@ while True:
     if menu_choice == 3:
         open_chats()
     elif menu_choice == 5:
-        submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database'))
+        submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\nSelect choice: '))
         if submenu_choice == 1:
             search.main()
             input()
         elif submenu_choice == 2:
-            print('sorry not ready yet')
+            update_usercount()
+            input()
         elif submenu_choice == 3:
             update_user_card_url()
             request.downloaddb()

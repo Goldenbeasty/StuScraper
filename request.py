@@ -15,8 +15,6 @@ threadcount = int(config['system']['threadcount'])
 host = config['host']['hostname'] + '_'
 failedlist = []
 user_card_url = config['user']['user_card_url']
-prefix = config['user']['prefix']
-suffix = config['user']['suffix']
 
 def getuserbyid(id):
     print(id)
