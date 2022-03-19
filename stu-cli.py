@@ -9,6 +9,7 @@ import configparser
 from getpass import getpass
 import pickle
 
+import request
 import search
 
 config = configparser.ConfigParser(interpolation=None)
@@ -164,6 +165,61 @@ def open_chats():
     get_chatpage()
     choose_message()
 
+def update_user_card_url():
+    chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
+
+    parsedinput = BeautifulSoup(chat_response.text, "lxml")
+    meta_config = parsedinput.head.find('meta', attrs={'name':"suhtlus:config"}).get('content')
+    user_card_url = str(json.loads(meta_config)['user_card_url'])
+    config['user']['user_card_url'] = user_card_url
+    with open ('config.ini', 'w') as configfile:
+        config.write(configfile)
+        configfile.close()
+# UID = {
+#     'USERID' : '9999999999'
+# }
+# print(user_card_url.format(**UID))
+
+
+def submit_draft():
+    headers = {
+        'Host': 'tamme.ope.ee',
+        'Content-Length': '226',
+        'Sec-Ch-Ua': '" Not A;Brand";v="99", "Chromium";v="96"',
+        'Sec-Ch-Ua-Mobile': '?0',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Accept': '*/*',
+        'X-User-Token': 'tamme.2496.1647723554.9564677a3fe91c373f5e604cf72b1caf420c5935',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-App-Type': 'web',
+        'Sec-Ch-Ua-Platform': '"Linux"',
+        'Origin': 'https://tamme.ope.ee',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Dest': 'empty',
+        'Referer': 'https://tamme.ope.ee/suhtlus/p/new',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'en-US,en;q=0.9',
+        # Requests sorts cookies= alphabetically
+        # 'Cookie': '_ga=GA1.1.629990194.1642549389; _gid=GA1.1.1280619525.1647691284; __stclid=1647691535a447ff6ab32a6b3ae4d0847a53acd8; _st_sess=1ada1ba21977b830533ec177960ff9b65925a17028efb5f2db9fd526696f1502',
+    }
+
+    params = {
+        'v': '2020',
+        'save_draft': '1',
+    }
+
+    data = 'Post%5Btitle%5D=So+anyways+what+is+this+I+do+neowitjsajkjdwijoidajwoijdoiajijdoij&Post%5Bevent_date%5D=&Post%5Bevent_time%5D=&Post%5Bevent_date_end%5D=&Post%5Bevent_time_end%5D=&Post%5Bbody%5D=joasdoijawidjoiawjdiowajoidjadawd'
+
+    response = requests.post('https://tamme.ope.ee/suhtlus/api/posts/edit', headers=headers, params=params, cookies=cookies, data=data, verify=True)
+    print(response)
+
+
+
+
+
+
 while True:
     print('''
     1) Päevik
@@ -182,5 +238,15 @@ while True:
     if menu_choice == 3:
         open_chats()
     elif menu_choice == 5:
-        search.main()
-        input()
+        submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database'))
+        if submenu_choice == 1:
+            search.main()
+            input()
+        elif submenu_choice == 2:
+            print('sorry not ready yet')
+        elif submenu_choice == 3:
+            update_user_card_url()
+            request.downloaddb()
+            input()
+    elif menu_choice == 9:
+        submit_draft()
