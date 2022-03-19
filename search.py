@@ -2,7 +2,6 @@
 
 import configparser
 import json
-import config
 import os
 
 config = configparser.ConfigParser(interpolation=None)

@@ -9,6 +9,8 @@ import configparser
 from getpass import getpass
 import pickle
 
+import search
+
 config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
 host = config['host']['hostname']
@@ -158,10 +160,10 @@ def choose_message():
     displaymessage(message_id)
     input()
 
-
 def open_chats():
     get_chatpage()
     choose_message()
+
 while True:
     print('''
     1) Päevik
@@ -179,3 +181,6 @@ while True:
     
     if menu_choice == 3:
         open_chats()
+    elif menu_choice == 5:
+        search.main()
+        input()
