@@ -38,7 +38,7 @@ else:
 print('')
 
 cookies = {
-    'cli-tamme': '220306',
+    f'cli-{host}': '220306',
     'bid': '2.820883.33ee5e4400.2f005fc03d',
     '_ga': 'GA1.1.629990194.1642549389',
     '__stclid': '16465759597597d41ca42a6b3ae4d01673932c34',
@@ -46,7 +46,7 @@ cookies = {
 }
 
 headers = {
-    'Host': 'tamme.ope.ee',
+    'Host': f'{host}.ope.ee',
     'Content-Length': '75',
     'Sec-Ch-Ua': '" Not A;Brand";v="99", "Chromium";v="96"',
     'Accept': '*/*',
@@ -55,11 +55,11 @@ headers = {
     'Sec-Ch-Ua-Mobile': '?0',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
     'Sec-Ch-Ua-Platform': '"Linux"',
-    'Origin': 'https://tamme.ope.ee',
+    'Origin': f'https://{host}.ope.ee',
     'Sec-Fetch-Site': 'same-origin',
     'Sec-Fetch-Mode': 'cors',
     'Sec-Fetch-Dest': 'empty',
-    'Referer': 'https://tamme.ope.ee/auth/',
+    'Referer': f'https://{host}.ope.ee/auth/',
     'Accept-Encoding': 'gzip, deflate',
     'Accept-Language': 'en-US,en;q=0.9',
 }
@@ -71,12 +71,12 @@ params = {
 if loginmethod == 1: #Needs testing, unsure if works
     data = f'data%5BUser%5D%5Busername%5D={name_first}+{name_last}&data%5BUser%5D%5Bpassword%5D={password}'
 
-    response = requestssession.post('https://tamme.ope.ee/auth/', headers=headers, params=params, cookies=cookies, data=data, verify=False)
+    response = requestssession.post(f'https://{host}.ope.ee/auth/', headers=headers, params=params, cookies=cookies, data=data, verify=False)
 
 if loginmethod == 2:
     data = f'data%5BUser%5D%5Busername%5D={name_first}+{name_last}&data%5BUser%5D%5Bpassword%5D='
 
-    first_response = requests.post('https://tamme.ope.ee/auth/smartid', headers=headers, params=params, cookies=cookies, data=data, verify=True)
+    first_response = requests.post(f'https://{host}.ope.ee/auth/smartid', headers=headers, params=params, cookies=cookies, data=data, verify=True)
     first_response = json.loads(first_response.text)
     print(f"Your login code is: {first_response['data']['verification_code']}")    
 
@@ -87,16 +87,16 @@ if loginmethod == 2:
     data = 'smartid_state=' + urllib.parse.quote(first_response['data']['state'])
     answer = False
     while answer == False:
-        response = requestssession.post('https://tamme.ope.ee/auth/smartid/', headers=headers, params=params, cookies=cookies, data=data, verify=True)
+        response = requestssession.post(f'https://{host}.ope.ee/auth/smartid/', headers=headers, params=params, cookies=cookies, data=data, verify=True)
         if len(response.text) == 0:
-            webpage = requestssession.get('https://tamme.ope.ee')
+            webpage = requestssession.get(f'https://{host}.ope.ee')
             answer = True
         sleep(2)
 
     page = requestssession.get(response.headers['x-redirect'], cookies=cookies)
 
 headers = {
-    'Host': 'tamme.ope.ee',
+    'Host': f'{host}.ope.ee',
     'Sec-Ch-Ua': '" Not A;Brand";v="99", "Chromium";v="96"',
     'Accept': '*/*',
     'X-Requested-With': 'XMLHttpRequest',
@@ -128,13 +128,13 @@ with open('cookiejar', 'wb') as f:
     pickle.dump(requestssession.cookies, f)
 
 def getrawpost(message_id):
-    page = requestssession.get(f'https://tamme.ope.ee/suhtlus/api/posts/get/{message_id}', headers=headers, params=params, cookies=cookies, verify=True)
+    page = requestssession.get(f'https://{host}.ope.ee/suhtlus/api/posts/get/{message_id}', headers=headers, params=params, cookies=cookies, verify=True)
     return page
 
 #godsend
 def get_chatpage():
     global chatspage
-    chatspage = requestssession.get('https://tamme.ope.ee/suhtlus/api/channels/updates/a/inbox?v=2020&output-format=json&merge_events=0&get_post_membership_data=0&language=et')
+    chatspage = requestssession.get(f'https://{host}.ope.ee/suhtlus/api/channels/updates/a/inbox?v=2020&output-format=json&merge_events=0&get_post_membership_data=0&language=et')
 
 def displaymessage(message_id):
     page = getrawpost(message_id)
@@ -149,7 +149,11 @@ def choose_message():
     message_choice = input('\nChoose message: ')
     print('\n')
     if message_choice == 'q': return
-    
+    if message_choice == 'm': 
+        for i in range(25-10):
+            i += 10
+            print(f"{i}) {chatdata['updates'][i]['title']}")
+        message_choice = input('\nChoose message: ')
     message_id = chatdata['updates'][int(message_choice)]['id']
     displaymessage(message_id)
     input()
