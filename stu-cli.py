@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import json
-from time import sleep
+from time import sleep, time
 import requests
 import urllib.parse
 from bs4 import BeautifulSoup
@@ -18,6 +18,8 @@ config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
 host = config['host']['hostname']
 requestssession = requests.Session()
+
+last_homepage_fetch = 0
 
 loginmethod = int(input(' 1) Password\n 2) Smart-ID\n 3) ID card\n 4) Existing session\nSelect login method: '))
 
@@ -188,11 +190,14 @@ def update_user_card_url():
     save_config_file()
 
 
-
 def gethomepage():
-    homepage = requestssession.get(f"https://{host}.ope.ee/s/{config['user']['selfid']}", headers=headers, cookies=cookies, verify=True)
-    parsed_output = BeautifulSoup(homepage.text, "lxml")
-    return parsed_output
+    global parsed_homepage
+    global last_homepage_fetch
+    if (time() - last_homepage_fetch) > 20:
+        homepage = requestssession.get(f"https://{host}.ope.ee/s/{config['user']['selfid']}", headers=headers, cookies=cookies, verify=True)
+        last_homepage_fetch = time()
+        parsed_homepage = BeautifulSoup(homepage.text, "lxml")
+    return parsed_homepage
 
 def getgrades():
     print('Grades:\n')
@@ -211,14 +216,7 @@ def gethomework():
     for i in printablegrade:
         print(f"Tähtaeg {i.attrs['data-date'][6:8]}.{i.attrs['data-date'][4:6]}")
         print(i.text.replace('\n',' ').replace('https://',' https://'),end='\n\n')
-        
-        # i = i.text.split('•')
-        # print(f'{i[0]:<60} • {i[1]}')
 
-# UID = {
-#     'USERID' : '9999999999'
-# }
-# print(user_card_url.format(**UID))
 
 
 # def submit_draft():
@@ -264,29 +262,30 @@ while True:
     menu_choice = input('Choose menu: ')
     if menu_choice == 'q':
         quit('')
-    else:
-        menu_choice = int(menu_choice)
     
     os.system('clear')
+    
+    if menu_choice.isnumeric():
+        menu_choice = int(menu_choice)
 
-    if menu_choice == 3:
-        open_chats()
-    elif menu_choice == 5:
-        submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\nSelect choice: '))
-        if submenu_choice == 1:
-            search.main()
+        if menu_choice == 1:
+            getgrades()
+            gethomework()
             input()
-        elif submenu_choice == 2:
-            update_usercount()
-            input()
-        elif submenu_choice == 3:
-            update_user_card_url()
-            request.downloaddb()
-            input()
-    elif menu_choice == 1:
-        getgrades()
-        gethomework()
-        input()
+        elif menu_choice == 3:
+            open_chats()
+        elif menu_choice == 5:
+            submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\nSelect choice: '))
+            if submenu_choice == 1:
+                search.main()
+                input()
+            elif submenu_choice == 2:
+                update_usercount()
+                input()
+            elif submenu_choice == 3:
+                update_user_card_url()
+                request.downloaddb()
+                input()
     # elif menu_choice == 9:
     #     chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
     #     parsedinput = BeautifulSoup(chat_response.text, "lxml")
