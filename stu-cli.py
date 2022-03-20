@@ -181,7 +181,8 @@ def update_usercount():
     save_config_file()
 
 def update_user_card_url():
-    chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
+    # global config
+    chat_response = requestssession.get(f'https://{host}.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
 
     parsedinput = BeautifulSoup(chat_response.text, "lxml")
     meta_config = parsedinput.head.find('meta', attrs={'name':"suhtlus:config"}).get('content')
@@ -280,11 +281,12 @@ while True:
                 search.main()
                 input()
             elif submenu_choice == 2:
+                update_user_card_url()
                 update_usercount()
                 input()
             elif submenu_choice == 3:
                 update_user_card_url()
-                request.downloaddb()
+                request.downloaddb(config['host']['usercount'])
                 input()
     # elif menu_choice == 9:
     #     chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)

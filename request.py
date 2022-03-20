@@ -35,16 +35,16 @@ def downloadbyid(id):
         f.close()
     return(id)
 
-def downloaddb():
+def downloaddb(usercount):
     start = timer()
-    response = ThreadPool(int(config['system']['threadcount'])).imap_unordered(downloadbyid, range(0, int(config['host']['usercount'])))
+    response = ThreadPool(int(config['system']['threadcount'])).imap_unordered(downloadbyid, range(0, int(usercount)))
     for res in response:
         print(res)
     elapsedtime = timer() - start
     print(f"Elapsed Time: {elapsedtime}")
-    print(f"With avarage speed of {int(config['host']['usercount']) / elapsedtime}")
+    print(f"With avarage speed of {int(usercount) / elapsedtime}")
     if len(failedlist) != 0:
         print('Failed to get data for: ' + str(failedlist))
 
 if __name__ == '__main__':
-    downloaddb()
+    downloaddb(config['host']['usercount'])
