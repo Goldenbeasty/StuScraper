@@ -6,8 +6,10 @@ import requests
 config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
 
+user_card_url = config['user']['user_card_url']
+
 def getrequestforuser(id):
-    return requests.get(config['user']['prefix'] + str(id) + config['user']['suffix'])
+    return requests.get(user_card_url.format(USERID=id))
 
 def updateusercount():
     currentusercount = int(config['host']['usercount'])

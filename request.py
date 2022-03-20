@@ -14,12 +14,11 @@ config.read('config.ini')
 threadcount = int(config['system']['threadcount'])
 host = config['host']['hostname'] + '_'
 failedlist = []
-prefix = config['user']['prefix']
-suffix = config['user']['suffix']
+user_card_url = config['user']['user_card_url']
 
 def getuserbyid(id):
     print(id)
-    data = requests.get(config['user']['prefix'] + str(id) + config['user']['suffix'])
+    data = requests.get(user_card_url.format(USERID=id))
     data = json.loads(data.text)
     with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + host + str(id), 'w') as file:
         file.write(json.dumps(data))
@@ -27,7 +26,7 @@ def getuserbyid(id):
 
 def downloadbyid(id):
     id = id + 1
-    r = requests.get(prefix + str(id) + suffix)
+    r = requests.get(user_card_url.format(USERID=id))
     if r.status_code != 200:
         failedlist.append(id)
     info = json.dumps(json.loads(r.text))
