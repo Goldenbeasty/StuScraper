@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import configparser
 from getpass import getpass
 import pickle
+import os
 
 import request
 import search
@@ -194,6 +195,7 @@ def gethomepage():
     return parsed_output
 
 def getgrades():
+    print('Grades:\n')
     gradedata = gethomepage()
     printablegrade = gradedata.body.findAll('div', attrs={'class':'stream-entry ng-grade-is-summary-wrapper'})
     
@@ -202,11 +204,12 @@ def getgrades():
         print(f'{i[0]:<60} • {i[1]}')
 
 def gethomework():
-    print('')
+    print('Homework:\n')
     gradedata = gethomepage()
-    printablegrade = gradedata.body.findAll('div', attrs={'class':'todo'})
+    printablegrade = gradedata.body.findAll('div', attrs={'class':'todo_container'})
     # print(printablegrade.text)
     for i in printablegrade:
+        print(f"Tähtaeg {i.attrs['data-date'][6:8]}.{i.attrs['data-date'][4:6]}")
         print(i.text.replace('\n',' ').replace('https://',' https://'),end='\n\n')
         
         # i = i.text.split('•')
@@ -264,6 +267,8 @@ while True:
     else:
         menu_choice = int(menu_choice)
     
+    os.system('clear')
+
     if menu_choice == 3:
         open_chats()
     elif menu_choice == 5:
