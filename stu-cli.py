@@ -187,14 +187,30 @@ def update_user_card_url():
     save_config_file()
 
 
-def getgrades():
+
+def gethomepage():
     homepage = requestssession.get(f"https://{host}.ope.ee/s/{config['user']['selfid']}", headers=headers, cookies=cookies, verify=True)
-    gradedata = BeautifulSoup(homepage.text, "lxml")
+    parsed_output = BeautifulSoup(homepage.text, "lxml")
+    return parsed_output
+
+def getgrades():
+    gradedata = gethomepage()
     printablegrade = gradedata.body.findAll('div', attrs={'class':'stream-entry ng-grade-is-summary-wrapper'})
     
     for i in printablegrade:
         i = i.text.split('•')
         print(f'{i[0]:<60} • {i[1]}')
+
+def gethomework():
+    print('')
+    gradedata = gethomepage()
+    printablegrade = gradedata.body.findAll('div', attrs={'class':'todo'})
+    # print(printablegrade.text)
+    for i in printablegrade:
+        print(i.text.replace('\n',' ').replace('https://',' https://'),end='\n\n')
+        
+        # i = i.text.split('•')
+        # print(f'{i[0]:<60} • {i[1]}')
 
 # UID = {
 #     'USERID' : '9999999999'
@@ -264,6 +280,7 @@ while True:
             input()
     elif menu_choice == 1:
         getgrades()
+        gethomework()
         input()
     # elif menu_choice == 9:
     #     chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
