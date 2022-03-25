@@ -218,39 +218,6 @@ def gethomework():
         print(f"Tähtaeg {i.attrs['data-date'][6:8]}.{i.attrs['data-date'][4:6]}")
         print(i.text.replace('\n',' ').replace('https://',' https://'),end='\n\n')
 
-
-
-# def submit_draft():
-#     headers = {
-#         'Host': 'tamme.ope.ee',
-#         'Sec-Ch-Ua': '" Not A;Brand";v="99", "Chromium";v="96"',
-#         'Sec-Ch-Ua-Mobile': '?0',
-#         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
-#         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-#         'Accept': '*/*',
-#         'X-User-Token': xuid_token,
-#         'X-Requested-With': 'XMLHttpRequest',
-#         'X-App-Type': 'web',
-#         'Sec-Ch-Ua-Platform': '"Linux"',
-#         'Origin': 'https://tamme.ope.ee',
-#         'Sec-Fetch-Site': 'same-origin',
-#         'Sec-Fetch-Mode': 'cors',
-#         'Sec-Fetch-Dest': 'empty',
-#         'Referer': 'https://tamme.ope.ee/suhtlus/p/13348039',
-#         'Accept-Encoding': 'gzip, deflate',
-#         'Accept-Language': 'en-US,en;q=0.9',
-#     }
-
-#     params = {
-#         'v': '2020',
-#         'save_draft': '1',
-#     }
-
-#     data = 'Post%5Bid%5D=13348039&Post%5Btitle%5D=So+anyways+what+is+this+I+do+neowitjsajkjdwijoidajwoijdoiajijdoij&Post%5Bevent_date%5D=&Post%5Bevent_time%5D=&Post%5Bevent_date_end%5D=&Post%5Bevent_time_end%5D=&Post%5Bbody%5D=joasdoijawidjoiawjdiowajoidjadawd'
-
-#     response = requests.post('https://tamme.ope.ee/suhtlus/api/posts/edit', headers=headers, params=params, cookies=cookies, data=data, verify=True)
-#     print(response)
-
 while True:
     print('''
     1) Päevik
@@ -288,10 +255,3 @@ while True:
                 update_user_card_url()
                 request.downloaddb(config['host']['usercount'])
                 input()
-    # elif menu_choice == 9:
-    #     chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
-    #     parsedinput = BeautifulSoup(chat_response.text, "lxml")
-    #     meta_config = parsedinput.head.find('meta', attrs={'name':"suhtlus:config"}).get('content')
-    #     xuid_token = json.loads(meta_config)['user']['token']
-    #     print(xuid_token)
-    #     submit_draft()
