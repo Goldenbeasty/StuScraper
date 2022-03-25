@@ -125,29 +125,36 @@ params = {
     'mark_read': '0',
 }
 
+# After receiving the session token dump the cookies to a file
 with open('cookiejar', 'wb') as f:
     pickle.dump(requestssession.cookies, f)
 
+# Save config file after changes
 def save_config_file():
     with open ('config.ini', 'w') as configfile:
         config.write(configfile)
         configfile.close()
 
+def logout():
+    os.remove('cookiejar')
+
+# Get raw post html using the post id
 def getrawpost(message_id):
     page = requestssession.get(f'https://{host}.ope.ee/suhtlus/api/posts/get/{message_id}', headers=headers, params=params, cookies=cookies, verify=True)
     return page
 
-#godsend
+# Get JSON formatted chats page
 def get_chatpage():
     global chatspage
     chatspage = requestssession.get(f'https://{host}.ope.ee/suhtlus/api/channels/updates/a/inbox?v=2020&output-format=json&merge_events=0&get_post_membership_data=0&language=et')
 
+# Display message body
 def displaymessage(message_id):
     page = getrawpost(message_id)
     parsed_message = BeautifulSoup(page.text, "lxml")
     print(parsed_message.body.find('div', attrs={'class':'post-body formatted-text'}).text)
 
-
+# Choose the message to open
 def choose_message():
     chatdata = json.loads(chatspage.text)
     for i in range(10):
@@ -174,8 +181,8 @@ def update_usercount():
     config['host']['usercount'] = str(count)
     save_config_file()
 
+# Update user card url
 def update_user_card_url():
-    # global config
     chat_response = requestssession.get(f'https://{host}.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
 
     parsedinput = BeautifulSoup(chat_response.text, "lxml")
@@ -184,7 +191,7 @@ def update_user_card_url():
     config['user']['user_card_url'] = user_card_url
     save_config_file()
 
-
+# Get the homepage with homework and grades
 def gethomepage():
     global parsed_homepage
     global last_homepage_fetch
@@ -193,6 +200,7 @@ def gethomepage():
         last_homepage_fetch = time()
         parsed_homepage = BeautifulSoup(homepage.text, "lxml")
     return parsed_homepage
+
 
 def getgrades():
     print('Grades:\n')
@@ -222,9 +230,15 @@ while True:
     ''')
     
     menu_choice = input('Choose menu: ')
+
+    # Exit with q
     if menu_choice == 'q':
         quit('')
     
+    # Logout with l
+    elif menu_choice == 'l':
+        logout()
+
     os.system('clear')
     
     if menu_choice.isnumeric():
