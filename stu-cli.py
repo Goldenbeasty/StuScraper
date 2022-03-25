@@ -72,11 +72,11 @@ params = {
 }
 
 if loginmethod == 1: #Needs testing, unsure if works
-    data = f'data%5BUser%5D%5Busername%5D={username}&data%5BUser%5D%5Bpassword%5D={password}'
+    data = f'data%5BUser%5D%5Busername%5D={username}&data%5BUser%5D%5Bpassword%5D={password}&data%5BUser%5D%5Bautologin_do%5D=on'
     response = requestssession.post(f'https://{host}.ope.ee/auth/', headers=headers, params=params, cookies=cookies, data=data, verify=False)
 
 if loginmethod == 2:
-    data = f'data%5BUser%5D%5Busername%5D={username}&data%5BUser%5D%5Bpassword%5D='
+    data = f'data%5BUser%5D%5Busername%5D={username}&data%5BUser%5D%5Bpassword%5D=&data%5BUser%5D%5Bautologin_do%5D=on'
     first_response = requests.post(f'https://{host}.ope.ee/auth/smartid', headers=headers, params=params, cookies=cookies, data=data, verify=True)
     first_response = json.loads(first_response.text)
     print(f"Your login code is: {first_response['data']['verification_code']}")    
