@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-from distutils.command.config import config
 import requests
 import configparser
 import json
@@ -11,18 +10,9 @@ from time import time as timer
 config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
 
-threadcount = int(config['system']['threadcount'])
 host = config['host']['hostname'] + '_'
 failedlist = []
 user_card_url = config['user']['user_card_url']
-
-def getuserbyid(id):
-    print(id)
-    data = requests.get(user_card_url.format(USERID=id))
-    data = json.loads(data.text)
-    with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + host + str(id), 'w') as file:
-        file.write(json.dumps(data))
-        file.close()
 
 def downloadbyid(id):
     id = id + 1
