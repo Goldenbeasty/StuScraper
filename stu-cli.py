@@ -25,16 +25,12 @@ loginmethod = int(input(' 1) Password\n 2) Smart-ID\n 3) ID card\n 4) Existing s
 
 if loginmethod == 1:
     print('currently not supported')
-    username = [str(input('Sisesta nimi: '))]
-    username = username[0].split()
-    name_first = username[0]
-    name_last = username[1]
+    username = str(input('Sisesta nimi: '))
+    username = username.replace(' ', '+')
     password = getpass('Sisesta parool: ')
 elif loginmethod == 2:
-    username = [str(input('Sisesta nimi: '))]
-    username = username[0].split()
-    name_first = username[0]
-    name_last = username[1]
+    username = str(input('Sisesta nimi: '))
+    username = username.replace(' ', '+')
 elif loginmethod == 3:
     print('currently not supported')
 elif loginmethod == 4:
@@ -76,13 +72,11 @@ params = {
 }
 
 if loginmethod == 1: #Needs testing, unsure if works
-    data = f'data%5BUser%5D%5Busername%5D={name_first}+{name_last}&data%5BUser%5D%5Bpassword%5D={password}'
-
+    data = f'data%5BUser%5D%5Busername%5D={username}&data%5BUser%5D%5Bpassword%5D={password}'
     response = requestssession.post(f'https://{host}.ope.ee/auth/', headers=headers, params=params, cookies=cookies, data=data, verify=False)
 
 if loginmethod == 2:
-    data = f'data%5BUser%5D%5Busername%5D={name_first}+{name_last}&data%5BUser%5D%5Bpassword%5D='
-
+    data = f'data%5BUser%5D%5Busername%5D={username}&data%5BUser%5D%5Bpassword%5D='
     first_response = requests.post(f'https://{host}.ope.ee/auth/smartid', headers=headers, params=params, cookies=cookies, data=data, verify=True)
     first_response = json.loads(first_response.text)
     print(f"Your login code is: {first_response['data']['verification_code']}")    
