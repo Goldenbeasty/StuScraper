@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 
 import json
-from time import sleep
+from time import sleep, time
 import requests
 import urllib.parse
 from bs4 import BeautifulSoup
 import configparser
 from getpass import getpass
 import pickle
+import os
 
 import request
 import search
@@ -18,20 +19,18 @@ config.read('config.ini')
 host = config['host']['hostname']
 requestssession = requests.Session()
 
+last_homepage_fetch = 0
+
 loginmethod = int(input(' 1) Password\n 2) Smart-ID\n 3) ID card\n 4) Existing session\nSelect login method: '))
 
 if loginmethod == 1:
     print('currently not supported')
-    username = [str(input('Sisesta nimi: '))]
-    username = username[0].split()
-    name_first = username[0]
-    name_last = username[1]
+    username = str(input('Sisesta nimi: '))
+    username = username.replace(' ', '+')
     password = getpass('Sisesta parool: ')
 elif loginmethod == 2:
-    username = [str(input('Sisesta nimi: '))]
-    username = username[0].split()
-    name_first = username[0]
-    name_last = username[1]
+    username = str(input('Sisesta nimi: '))
+    username = username.replace(' ', '+')
 elif loginmethod == 3:
     print('currently not supported')
 elif loginmethod == 4:
@@ -73,13 +72,11 @@ params = {
 }
 
 if loginmethod == 1: #Needs testing, unsure if works
-    data = f'data%5BUser%5D%5Busername%5D={name_first}+{name_last}&data%5BUser%5D%5Bpassword%5D={password}'
-
+    data = f'data%5BUser%5D%5Busername%5D={username}&data%5BUser%5D%5Bpassword%5D={password}'
     response = requestssession.post(f'https://{host}.ope.ee/auth/', headers=headers, params=params, cookies=cookies, data=data, verify=False)
 
 if loginmethod == 2:
-    data = f'data%5BUser%5D%5Busername%5D={name_first}+{name_last}&data%5BUser%5D%5Bpassword%5D='
-
+    data = f'data%5BUser%5D%5Busername%5D={username}&data%5BUser%5D%5Bpassword%5D='
     first_response = requests.post(f'https://{host}.ope.ee/auth/smartid', headers=headers, params=params, cookies=cookies, data=data, verify=True)
     first_response = json.loads(first_response.text)
     print(f"Your login code is: {first_response['data']['verification_code']}")    
@@ -178,7 +175,8 @@ def update_usercount():
     save_config_file()
 
 def update_user_card_url():
-    chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
+    # global config
+    chat_response = requestssession.get(f'https://{host}.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
 
     parsedinput = BeautifulSoup(chat_response.text, "lxml")
     meta_config = parsedinput.head.find('meta', attrs={'name':"suhtlus:config"}).get('content')
@@ -186,42 +184,33 @@ def update_user_card_url():
     config['user']['user_card_url'] = user_card_url
     save_config_file()
 
-# UID = {
-#     'USERID' : '9999999999'
-# }
-# print(user_card_url.format(**UID))
 
+def gethomepage():
+    global parsed_homepage
+    global last_homepage_fetch
+    if (time() - last_homepage_fetch) > 20:
+        homepage = requestssession.get(f"https://{host}.ope.ee/s/{config['user']['selfid']}", headers=headers, cookies=cookies, verify=True)
+        last_homepage_fetch = time()
+        parsed_homepage = BeautifulSoup(homepage.text, "lxml")
+    return parsed_homepage
 
-# def submit_draft():
-#     headers = {
-#         'Host': 'tamme.ope.ee',
-#         'Sec-Ch-Ua': '" Not A;Brand";v="99", "Chromium";v="96"',
-#         'Sec-Ch-Ua-Mobile': '?0',
-#         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
-#         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-#         'Accept': '*/*',
-#         'X-User-Token': xuid_token,
-#         'X-Requested-With': 'XMLHttpRequest',
-#         'X-App-Type': 'web',
-#         'Sec-Ch-Ua-Platform': '"Linux"',
-#         'Origin': 'https://tamme.ope.ee',
-#         'Sec-Fetch-Site': 'same-origin',
-#         'Sec-Fetch-Mode': 'cors',
-#         'Sec-Fetch-Dest': 'empty',
-#         'Referer': 'https://tamme.ope.ee/suhtlus/p/13348039',
-#         'Accept-Encoding': 'gzip, deflate',
-#         'Accept-Language': 'en-US,en;q=0.9',
-#     }
+def getgrades():
+    print('Grades:\n')
+    gradedata = gethomepage()
+    printablegrade = gradedata.body.findAll('div', attrs={'class':'stream-entry ng-grade-is-summary-wrapper'})
+    
+    for i in printablegrade:
+        i = i.text.split('•')
+        print(f'{i[0]:<60} • {i[1]}')
 
-#     params = {
-#         'v': '2020',
-#         'save_draft': '1',
-#     }
-
-#     data = 'Post%5Bid%5D=13348039&Post%5Btitle%5D=So+anyways+what+is+this+I+do+neowitjsajkjdwijoidajwoijdoiajijdoij&Post%5Bevent_date%5D=&Post%5Bevent_time%5D=&Post%5Bevent_date_end%5D=&Post%5Bevent_time_end%5D=&Post%5Bbody%5D=joasdoijawidjoiawjdiowajoidjadawd'
-
-#     response = requests.post('https://tamme.ope.ee/suhtlus/api/posts/edit', headers=headers, params=params, cookies=cookies, data=data, verify=True)
-#     print(response)
+def gethomework():
+    print('Homework:\n')
+    gradedata = gethomepage()
+    printablegrade = gradedata.body.findAll('div', attrs={'class':'todo_container'})
+    # print(printablegrade.text)
+    for i in printablegrade:
+        print(f"Tähtaeg {i.attrs['data-date'][6:8]}.{i.attrs['data-date'][4:6]}")
+        print(i.text.replace('\n',' ').replace('https://',' https://'),end='\n\n')
 
 while True:
     print('''
@@ -235,27 +224,28 @@ while True:
     menu_choice = input('Choose menu: ')
     if menu_choice == 'q':
         quit('')
-    else:
-        menu_choice = int(menu_choice)
     
-    if menu_choice == 3:
-        open_chats()
-    elif menu_choice == 5:
-        submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\nSelect choice: '))
-        if submenu_choice == 1:
-            search.main()
+    os.system('clear')
+    
+    if menu_choice.isnumeric():
+        menu_choice = int(menu_choice)
+
+        if menu_choice == 1:
+            getgrades()
+            gethomework()
             input()
-        elif submenu_choice == 2:
-            update_usercount()
-            input()
-        elif submenu_choice == 3:
-            update_user_card_url()
-            request.downloaddb()
-            input()
-    # elif menu_choice == 9:
-    #     chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
-    #     parsedinput = BeautifulSoup(chat_response.text, "lxml")
-    #     meta_config = parsedinput.head.find('meta', attrs={'name':"suhtlus:config"}).get('content')
-    #     xuid_token = json.loads(meta_config)['user']['token']
-    #     print(xuid_token)
-    #     submit_draft()
+        elif menu_choice == 3:
+            open_chats()
+        elif menu_choice == 5:
+            submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\nSelect choice: '))
+            if submenu_choice == 1:
+                search.main()
+                input()
+            elif submenu_choice == 2:
+                update_user_card_url()
+                update_usercount()
+                input()
+            elif submenu_choice == 3:
+                update_user_card_url()
+                request.downloaddb(config['host']['usercount'])
+                input()
