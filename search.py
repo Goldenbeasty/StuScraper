@@ -10,13 +10,15 @@ config.read('config.ini')
 usercount = int(config['host']['usercount'])
 host = config['host']['hostname'] + '_'
 
+# Return user data by id
 def id_search(uid):
     with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + host + str(uid), 'r') as file: # os.path etc. could be taken into a variable
         response = json.loads(file.read())
         file.close()
     return response
 
-def username_search(querry): # Returns all matching user id as an array
+# Return all matching user IDs as an array
+def username_search(querry):
     tmp = []
 
     response = []
@@ -32,6 +34,26 @@ def username_search(querry): # Returns all matching user id as an array
     return response
 
 def main():
+    list = username_search(str(input('Insert querry: ').capitalize()))
+    print('\n')
+
+    for user in list:
+        descriprion = ''
+
+        userdata = id_search(user)
+        names = f'{userdata["name_first"]} {userdata["name_last"]}'
+
+        if userdata['user_type_labels'] != None:
+            for i in range(len(userdata['user_type_labels'])):
+                descriprion += ' ' + userdata['user_type_labels'][i]
+                # if i is not the last element add a comma
+                if i != len(userdata['user_type_labels']) - 1:
+                    descriprion += ','
+
+        #print user id, names and description with uniform spacing in a form of a table
+        print(f'{userdata["id"]:<6} {names:<30} {descriprion:<20}')
+
+def main_legacy():
     list = username_search(str(input('Insert querry: ').capitalize()))
     print('\n')
 
