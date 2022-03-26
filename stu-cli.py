@@ -231,12 +231,111 @@ def gethomework():
         print(f"Tähtaeg {i.attrs['data-date'][6:8]}.{i.attrs['data-date'][4:6]}")
         print(i.text.replace('\n',' ').replace('https://',' https://'),end='\n\n')
 
+
+
+def send_message(Title, Message, subjects):
+    headers = {
+        'Host': f'{host}.ope.ee',
+        'Sec-Ch-Ua': '" Not A;Brand";v="99", "Chromium";v="96"',
+        'Sec-Ch-Ua-Mobile': '?0',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Accept': '*/*',
+        'X-User-Token': get_xuid_token(),
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-App-Type': 'web',
+        'Sec-Ch-Ua-Platform': '"Linux"',
+        'Origin': f'https://{host}.ope.ee',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Dest': 'empty',
+        'Referer': f'https://{host}.ope.ee/suhtlus/p/new',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'en-US,en;q=0.9',
+    }
+
+    params = {
+        'v': '2020',
+    }
+
+    data = {
+        'Post[title]': Title,
+        'Post[event_date]':'',
+        'Post[event_time]':'',
+        'Post[event_date_end]':'',
+        'Post[event_time_end]':'',
+        'Post[body]':Message,
+    }
+    data = data | subjects
+
+    response = requestssession.post(f'https://{host}.ope.ee/suhtlus/api/posts/edit', headers=headers, params=params, cookies=cookies, data=data, verify=True)
+    if response.status_code == 200:
+        print('Message sent!')
+    else:
+        print('Error sending message!')
+
+def get_xuid_token():
+    chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
+    parsedinput = BeautifulSoup(chat_response.text, "lxml")
+    meta_config = parsedinput.head.find('meta', attrs={'name':"suhtlus:config"}).get('content')
+    xuid_token = json.loads(meta_config)['user']['token']
+    return xuid_token
+
+# user interface to create and send messages
+def create_message():
+    subjects = {
+    }
+
+    composing_messsage = True
+    while composing_messsage:
+        print(""" 
+        1) Edit title
+        2) Edit message
+        3) Add subject
+        4) Remove subject
+        5) Send message
+        q) Cancel
+        99) Add everyone to subjects
+         """)
+        choice = input("Choose an option: ")
+        if choice == '1':
+            Title = input("Title: ")
+        elif choice == '2':
+            print("Message(Emty line + Ctrl + C to finish): ")
+            Message = ''
+            try:
+                while True:
+                    Message += input() + '\n'
+            except KeyboardInterrupt:
+                print('Message: \n\n' + Message)
+        elif choice == '3':            
+            search.main()
+            user_to_add = input("Choose user id to add: ")
+            if type(menu_choice) == int:
+                subjects[f'Post[recipients][{user_to_add}]'] = f'{host}-{user_to_add}-user'
+        elif choice == '4':
+            for i in subjects:
+                print(i)
+            user_to_remove = input("Choose user id to remove: ")
+            if type(menu_choice) == int:
+                del subjects[f'Post[recipients][{user_to_remove}]']
+        elif choice == '5':
+            send_message(Title, Message, subjects)
+            composing_messsage = False
+        elif choice == 'q':
+            composing_messsage = False
+        elif choice == '99':
+            for i in range(1, int(config['host']['usercount']) + 1):
+                subjects[f'Post[recipients][{i}]'] = f'{host}-{i}-user'
+        elif choice == 'l':
+            print(subjects)
+
 while True:
     print('''
     1) Päevik
     2) Tera
     3) Suhtlus
-    4) Klassid
+    4) Loo sõnum
     5) Search user
     ''')
     
@@ -261,6 +360,8 @@ while True:
             input()
         elif menu_choice == 3:
             open_chats()
+        elif menu_choice == 4:
+            create_message()
         elif menu_choice == 5:
             submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\nSelect choice: '))
             if submenu_choice == 1:
