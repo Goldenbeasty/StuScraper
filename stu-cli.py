@@ -234,8 +234,6 @@ def gethomework():
 
 
 def send_message(Title, Message, subjects):
-    print('message sent')
-    postid = 13406781
     headers = {
         'Host': f'{host}.ope.ee',
         'Sec-Ch-Ua': '" Not A;Brand";v="99", "Chromium";v="96"',
@@ -247,22 +245,20 @@ def send_message(Title, Message, subjects):
         'X-Requested-With': 'XMLHttpRequest',
         'X-App-Type': 'web',
         'Sec-Ch-Ua-Platform': '"Linux"',
-        'Origin': 'https://tamme.ope.ee',
+        'Origin': f'https://{host}.ope.ee',
         'Sec-Fetch-Site': 'same-origin',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Dest': 'empty',
-        'Referer': f'https://tamme.ope.ee/suhtlus/p/{postid}',
+        'Referer': f'https://{host}.ope.ee/suhtlus/p/new',
         'Accept-Encoding': 'gzip, deflate',
         'Accept-Language': 'en-US,en;q=0.9',
     }
 
     params = {
         'v': '2020',
-        'save_draft': '1',
     }
 
     data = {
-        'Post[id]': postid,
         'Post[title]': Title,
         'Post[event_date]':'',
         'Post[event_time]':'',
@@ -270,20 +266,13 @@ def send_message(Title, Message, subjects):
         'Post[event_time_end]':'',
         'Post[body]':Message,
     }
-    print(type(data))
-    print(type(subjects))
     data = data | subjects
 
     response = requestssession.post(f'https://{host}.ope.ee/suhtlus/api/posts/edit', headers=headers, params=params, cookies=cookies, data=data, verify=True)
-    print(response.text)
-
-subjects = {
-}
-
-for i in range(1, int(config['host']['usercount']) + 1):
-    subjects[f'Post[recipients][{i}]'] = f'{host}-{i}-user'
-
-
+    if response.status_code == 200:
+        print('Message sent!')
+    else:
+        print('Error sending message!')
 
 def get_xuid_token():
     chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
@@ -292,12 +281,61 @@ def get_xuid_token():
     xuid_token = json.loads(meta_config)['user']['token']
     return xuid_token
 
+# user interface to create and send messages
+def create_message():
+    subjects = {
+    }
+
+    composing_messsage = True
+    while composing_messsage:
+        print(""" 
+        1) Edit title
+        2) Edit message
+        3) Add subject
+        4) Remove subject
+        5) Send message
+        q) Cancel
+        99) Add everyone to subjects
+         """)
+        choice = input("Choose an option: ")
+        if choice == '1':
+            Title = input("Title: ")
+        elif choice == '2':
+            print("Message(Emty line + Ctrl + C to finish): ")
+            Message = ''
+            try:
+                while True:
+                    Message += input() + '\n'
+            except KeyboardInterrupt:
+                print('Message: \n\n' + Message)
+        elif choice == '3':            
+            search.main()
+            user_to_add = input("Choose user id to add: ")
+            if type(menu_choice) == int:
+                subjects[f'Post[recipients][{user_to_add}]'] = f'{host}-{user_to_add}-user'
+        elif choice == '4':
+            for i in subjects:
+                print(i)
+            user_to_remove = input("Choose user id to remove: ")
+            if type(menu_choice) == int:
+                del subjects[f'Post[recipients][{user_to_remove}]']
+        elif choice == '5':
+            send_message(Title, Message, subjects)
+            composing_messsage = False
+        elif choice == 'q':
+            composing_messsage = False
+        elif choice == '99':
+            for i in range(1, int(config['host']['usercount']) + 1):
+                subjects[f'Post[recipients][{i}]'] = f'{host}-{i}-user'
+        elif choice == 'l':
+            print(subjects)
+
 while True:
     print('''
     1) Päevik
     2) Tera
     3) Suhtlus
-    4) Klassid
+    4) Loo sõnum
     5) Search user
     ''')
     
@@ -311,7 +349,7 @@ while True:
     elif menu_choice == 'l':
         logout()
 
-    # os.system('clear')
+    os.system('clear')
     
     if menu_choice.isnumeric():
         menu_choice = int(menu_choice)
@@ -336,6 +374,4 @@ while True:
                 request.downloaddb(config['host']['usercount'])
                 input()
         elif menu_choice == 9:
-            # xuid_token = get_xuid_token()
-            # print(xuid_token)
-            send_message('Test', 'Test', subjects)
+            create_message()
