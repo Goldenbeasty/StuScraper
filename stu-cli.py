@@ -231,6 +231,67 @@ def gethomework():
         print(f"Tähtaeg {i.attrs['data-date'][6:8]}.{i.attrs['data-date'][4:6]}")
         print(i.text.replace('\n',' ').replace('https://',' https://'),end='\n\n')
 
+
+
+def send_message(Title, Message, subjects):
+    print('message sent')
+    postid = 13406781
+    headers = {
+        'Host': f'{host}.ope.ee',
+        'Sec-Ch-Ua': '" Not A;Brand";v="99", "Chromium";v="96"',
+        'Sec-Ch-Ua-Mobile': '?0',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Accept': '*/*',
+        'X-User-Token': get_xuid_token(),
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-App-Type': 'web',
+        'Sec-Ch-Ua-Platform': '"Linux"',
+        'Origin': 'https://tamme.ope.ee',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Dest': 'empty',
+        'Referer': f'https://tamme.ope.ee/suhtlus/p/{postid}',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'en-US,en;q=0.9',
+    }
+
+    params = {
+        'v': '2020',
+        'save_draft': '1',
+    }
+
+    data = {
+        'Post[id]': postid,
+        'Post[title]': Title,
+        'Post[event_date]':'',
+        'Post[event_time]':'',
+        'Post[event_date_end]':'',
+        'Post[event_time_end]':'',
+        'Post[body]':Message,
+    }
+    print(type(data))
+    print(type(subjects))
+    data = data | subjects
+
+    response = requestssession.post(f'https://{host}.ope.ee/suhtlus/api/posts/edit', headers=headers, params=params, cookies=cookies, data=data, verify=True)
+    print(response.text)
+
+subjects = {
+}
+
+for i in range(1, int(config['host']['usercount']) + 1):
+    subjects[f'Post[recipients][{i}]'] = f'{host}-{i}-user'
+
+
+
+def get_xuid_token():
+    chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
+    parsedinput = BeautifulSoup(chat_response.text, "lxml")
+    meta_config = parsedinput.head.find('meta', attrs={'name':"suhtlus:config"}).get('content')
+    xuid_token = json.loads(meta_config)['user']['token']
+    return xuid_token
+
 while True:
     print('''
     1) Päevik
@@ -250,7 +311,7 @@ while True:
     elif menu_choice == 'l':
         logout()
 
-    os.system('clear')
+    # os.system('clear')
     
     if menu_choice.isnumeric():
         menu_choice = int(menu_choice)
@@ -274,3 +335,7 @@ while True:
                 update_user_card_url()
                 request.downloaddb(config['host']['usercount'])
                 input()
+        elif menu_choice == 9:
+            # xuid_token = get_xuid_token()
+            # print(xuid_token)
+            send_message('Test', 'Test', subjects)
