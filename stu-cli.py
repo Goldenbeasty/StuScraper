@@ -360,6 +360,8 @@ while True:
             input()
         elif menu_choice == 3:
             open_chats()
+        elif menu_choice == 4:
+            create_message()
         elif menu_choice == 5:
             submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\nSelect choice: '))
             if submenu_choice == 1:
@@ -373,5 +375,3 @@ while True:
                 update_user_card_url()
                 request.downloaddb(config['host']['usercount'])
                 input()
-        elif menu_choice == 9:
-            create_message()
