@@ -151,9 +151,19 @@ def get_chatpage():
 
 # Display message body
 def displaymessage(message_id):
-    page = getrawpost(message_id)
-    parsed_message = BeautifulSoup(page.text, "lxml")
-    print(parsed_message.body.find('div', attrs={'class':'post-body formatted-text'}).text)
+    page = requestssession.get(f'https://{host}.ope.ee/suhtlus/api/posts/get/{message_id}', headers=headers, cookies=cookies, verify=True)
+    page = json.loads(page.text)
+    print(page['post']['title'])
+    print(page['post']['user_name_first'], page['post']['user_name_last'], end='\n\n\n')
+    print(page['post']['body'])
+    if page['post']['comment_count'] != 0 :
+        print('\n\nComments:')
+        comments = requestssession.get(f"https://{host}.ope.ee/suhtlus/api/{page['next_comments_url']}", headers=headers, cookies=cookies, verify=True)
+        comments = json.loads(comments.text)
+        for comment in comments:
+            print(comment['user_name_first'], comment['user_name_last'])
+            print(comment['body'], end='\n\n')
+        
 
 # Choose the message to open
 def choose_message():
@@ -170,12 +180,12 @@ def choose_message():
         message_choice = input('\nChoose message: ')
     message_id = chatdata['updates'][int(message_choice)]['id']
     displaymessage(message_id)
-    input()
 
 def open_chats():
     get_chatpage()
     choose_message()
-
+    input()
+    
 def update_usercount():
     count = usercounter.updateusercount()
     print(f'Current usercount is {count}')
