@@ -138,6 +138,7 @@ def save_config_file():
 def logout():
     os.remove('cookiejar')
     requestssession.get(f'https://{host}.ope.ee/auth/logout', headers=headers, params=params, verify=True)
+    quit("Logged out")
 
 # Get raw post html using the post id
 def getrawpost(message_id):
