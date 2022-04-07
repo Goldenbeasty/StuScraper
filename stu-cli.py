@@ -138,6 +138,7 @@ def save_config_file():
 def logout():
     os.remove('cookiejar')
     requestssession.get(f'https://{host}.ope.ee/auth/logout', headers=headers, params=params, verify=True)
+    quit("Logged out")
 
 # Get raw post html using the post id
 def getrawpost(message_id):
@@ -192,14 +193,19 @@ def update_usercount():
     config['host']['usercount'] = str(count)
     save_config_file()
 
-# Update user card url
-def update_user_card_url():
+# Update user data from chats page config
+def update_user_data():
     chat_response = requestssession.get(f'https://{host}.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
 
     parsedinput = BeautifulSoup(chat_response.text, "lxml")
     meta_config = parsedinput.head.find('meta', attrs={'name':"suhtlus:config"}).get('content')
-    user_card_url = str(json.loads(meta_config)['user_card_url'])
+    parsed = json.loads(meta_config)
+    user_card_url = str(parsed['user_card_url'])
     config['user']['user_card_url'] = user_card_url
+    uid = str(parsed['user']['id'])
+    config['user']['selfid'] = uid
+
+    print(f"Logged in as {str(parsed['user']['name_first'])} {str(parsed['user']['name_last'])}")
     save_config_file()
 
 # Get the homepage with homework and grades
@@ -330,6 +336,9 @@ def create_message():
         elif choice == 'l':
             print(subjects)
 
+# update configuraiton file and greet user
+update_user_data()
+
 while True:
     print('''
     1) Päevik
@@ -368,10 +377,8 @@ while True:
                 search.main()
                 input()
             elif submenu_choice == 2:
-                update_user_card_url()
                 update_usercount()
                 input()
             elif submenu_choice == 3:
-                update_user_card_url()
                 request.downloaddb(config['host']['usercount'])
                 input()
