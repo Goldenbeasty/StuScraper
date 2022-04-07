@@ -10,7 +10,7 @@ Currently logging in only works with Smart-ID, password login should work, needs
 
 Configuration data different for everyone
 
-Automatically updated values: `usercount`, `user_card_url`
+Automatically updated values: `usercount`, `user_card_url`, `selfid`
 
 Absoulutely needed configuration values: 
 
