@@ -11,7 +11,7 @@ user_card_url = config['user']['user_card_url']
 def getrequestforuser(id):
     return requests.get(user_card_url.format(USERID=id))
 
-def updateusercount():
+def updateusercount(config):
     currentusercount = int(config['host']['usercount'])
     if len(getrequestforuser(currentusercount).text) == 0:
         quit(print('Invalid user number in config file, please reduce the number!'))
@@ -25,5 +25,5 @@ def updateusercount():
     return currentusercount
 
 if __name__ == '__main__':
-    usercount = updateusercount()
+    usercount = updateusercount(config)
     print(f'Current user count is: {usercount}')
