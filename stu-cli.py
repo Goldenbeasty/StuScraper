@@ -188,7 +188,7 @@ def open_chats():
     input()
     
 def update_usercount():
-    count = usercounter.updateusercount()
+    count = usercounter.updateusercount(config)
     print(f'Current usercount is {count}')
     config['host']['usercount'] = str(count)
     save_config_file()
