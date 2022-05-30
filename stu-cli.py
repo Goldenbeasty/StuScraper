@@ -10,6 +10,8 @@ from getpass import getpass
 import pickle
 import os
 
+import bootstrap
+
 import request
 import search
 import usercounter
