@@ -7,16 +7,15 @@ import os
 from multiprocessing.pool import ThreadPool
 from time import time as timer
 
-config = configparser.ConfigParser(interpolation=None)
-config.read('config.ini')
+config_data = configparser.ConfigParser(interpolation=None)
+config_data.read('config.ini')
 
-host = config['host']['hostname'] + '_'
+host = config_data['host']['hostname'] + '_'
 failedlist = []
-user_card_url = config['user']['user_card_url']
 
 def downloadbyid(id):
     id = id + 1
-    r = requests.get(user_card_url.format(USERID=id))
+    r = requests.get(config_data['user']['user_card_url'].format(USERID=id))
     if r.status_code != 200:
         failedlist.append(id)
     info = json.dumps(json.loads(r.text))
@@ -25,9 +24,14 @@ def downloadbyid(id):
         f.close()
     return(id)
 
-def downloaddb(usercount):
+def downloaddb(config):
+    global config_data
+    config_data = config
+    usercount = config['host']['usercount']
+    threadcount = int(config['system']['threadcount'])
+    
     start = timer()
-    response = ThreadPool(int(config['system']['threadcount'])).imap_unordered(downloadbyid, range(0, int(usercount)))
+    response = ThreadPool(threadcount).imap_unordered(downloadbyid, range(0, int(usercount)))
     for res in response:
         print(res)
     elapsedtime = timer() - start
@@ -37,4 +41,4 @@ def downloaddb(usercount):
         print('Failed to get data for: ' + str(failedlist))
 
 if __name__ == '__main__':
-    downloaddb(config['host']['usercount'])
+    downloaddb(config_data)
