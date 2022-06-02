@@ -299,8 +299,9 @@ def create_message():
         1) Edit title
         2) Edit message
         3) Add subject
-        4) Remove subject
-        5) Send message
+        4) Add subject by description (e.g. õpilane (10ME) )
+        5) Remove subject
+        6) Send message
         q) Cancel
         99) Add everyone to subjects
          """)
@@ -321,12 +322,17 @@ def create_message():
             if type(menu_choice) == int:
                 subjects[f'Post[recipients][{user_to_add}]'] = f'{host}-{user_to_add}-user'
         elif choice == '4':
+            description_query = input("Choose subject description: ")
+            user_to_add = search.get_user_by_description(config, description_query)
+            for user in user_to_add:
+                subjects[f'Post[recipients][{user}]'] = f'{host}-{user}-user'
+        elif choice == '5':
             for i in subjects:
                 print(i)
             user_to_remove = input("Choose user id to remove: ")
             if type(menu_choice) == int:
                 del subjects[f'Post[recipients][{user_to_remove}]']
-        elif choice == '5':
+        elif choice == '6':
             send_message(Title, Message, subjects)
             composing_messsage = False
         elif choice == 'q':
@@ -335,6 +341,7 @@ def create_message():
             for i in range(1, int(config['host']['usercount']) + 1):
                 subjects[f'Post[recipients][{i}]'] = f'{host}-{i}-user'
         elif choice == 'l':
+            print(f"Total of {len(subjects)} subjects")
             print(subjects)
 
 # update configuraiton file and greet user

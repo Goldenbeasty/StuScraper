@@ -32,6 +32,16 @@ def username_search(querry, usercount):
             response.append(tmp[i]['id'])
     return response
 
+def get_user_by_description(config, querry):
+    querry = str(querry).lower()
+    usercout = int(config['host']['usercount'])
+    response = []
+    for i in range(usercout):
+        for item in id_search(i + 1)['user_type_labels']:
+            if str(querry).lower() in str(item).lower():
+                response.append(i + 1)
+    return response
+
 def main(config):
     usercount = int(config['host']['usercount'])
 
