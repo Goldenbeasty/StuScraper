@@ -5,7 +5,7 @@ WIP but implemented functions are: user database downloading, user search, chat 
 
 ## stu-cli
 Currently logging in only works with Smart-ID, password login should work, needs to be tested
-
+More can be learnt in [examples](examples.md)
 ## First time login
 
 On the first login the script creates a config.ini file and sets up your school. The school search is the same as on the website, but you might encounter some test "schools", what should be ignored.
