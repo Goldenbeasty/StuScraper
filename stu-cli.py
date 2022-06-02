@@ -23,7 +23,7 @@ requestssession = requests.Session()
 
 last_homepage_fetch = 0
 
-loginmethod = int(input(' 1) Password\n 2) Smart-ID\n 3) ID card\n 4) Existing session\nSelect login method: '))
+loginmethod = int(input(' 1) Password\n 2) Smart-ID\n 3) Existing session\nSelect login method: '))
 
 if loginmethod == 1:
     print('currently not supported')
@@ -34,8 +34,6 @@ elif loginmethod == 2:
     username = str(input('Sisesta nimi: '))
     username = username.replace(' ', '+')
 elif loginmethod == 3:
-    print('currently not supported')
-elif loginmethod == 4:
     with open('cookiejar', 'rb') as f:
         requestssession.cookies.update(pickle.load(f))
 else:
