@@ -388,5 +388,8 @@ while True:
                 update_usercount()
                 input()
             elif submenu_choice == 3:
+                # check if folder users exists
+                if not os.path.isdir('./users'):
+                    os.mkdir('./users')
                 request.downloaddb(config)
                 input()

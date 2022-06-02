@@ -1,5 +1,48 @@
 # How to use stu-cli
+Some menus expect a return
 
+## downloading the database
+```
+Logged in as Eesnimi Perekonnanimi
+
+    1) Päevik
+    2) Tera
+    3) Suhtlus
+    4) Loo sõnum
+    5) Search user
+    
+Choose menu: 5
+
+ 1) Search for name
+ 2) Update usercount
+ 3) Update local database
+Select choice: 2
+Current usercount is 3076
+
+    1) Päevik
+    2) Tera
+    3) Suhtlus
+    4) Loo sõnum
+    5) Search user
+    
+Choose menu: 5
+
+ 1) Search for name
+ 2) Update usercount
+ 3) Update local database
+Select choice: 3
+
+...
+3072
+3063
+3069
+3066
+3074
+Elapsed Time: 34.2168653011322
+With avarage speed of 89.89718879649148
+
+
+```
 ## sending messages
 **To send messages you have to have downloaded the database!**
 
