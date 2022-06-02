@@ -11,6 +11,7 @@ import pickle
 import os
 
 import bootstrap
+bootstrap.main()
 
 import request
 import search
@@ -26,7 +27,7 @@ last_homepage_fetch = 0
 loginmethod = int(input(' 1) Password\n 2) Smart-ID\n 3) Existing session\nSelect login method: '))
 
 if loginmethod == 1:
-    print('currently not supported')
+    print('Might not work')
     username = str(input('Sisesta nimi: '))
     username = username.replace(' ', '+')
     password = getpass('Sisesta parool: ')
@@ -315,7 +316,7 @@ def create_message():
             except KeyboardInterrupt:
                 print('Message: \n\n' + Message)
         elif choice == '3':            
-            search.main()
+            search.main(config)
             user_to_add = input("Choose user id to add: ")
             if type(menu_choice) == int:
                 subjects[f'Post[recipients][{user_to_add}]'] = f'{host}-{user_to_add}-user'
@@ -374,11 +375,11 @@ while True:
         elif menu_choice == 5:
             submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\nSelect choice: '))
             if submenu_choice == 1:
-                search.main()
+                search.main(config)
                 input()
             elif submenu_choice == 2:
                 update_usercount()
                 input()
             elif submenu_choice == 3:
-                request.downloaddb(config['host']['usercount'])
+                request.downloaddb(config)
                 input()

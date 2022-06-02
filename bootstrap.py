@@ -21,7 +21,7 @@ def gethost():
             hits.append(school)
 
     for index, school in enumerate(hits):
-        print(f"{index}) {school['name']}")
+        print(f"{index:>3}) {school['name']:<30}")
     
     choise = input('Enter the number of the school: ')
 
@@ -30,15 +30,19 @@ def gethost():
 
     return hits[int(choise)]['client']
 
-if not os.path.exists('./config.ini'):
-    print('No configuraton file found. Creating one:')
-    config = configparser.ConfigParser()
-    config['host'] = {}
-    config['user'] = {}
-    config['system'] = {}
-    config['host']['hostname'] = gethost()
-    config['host']['usercount'] = '1'
-    config['user']['selfid'] = '1'
-    config['user']['user_card_url'] = ''
-    config['system']['threadcount'] = '75'
-    save_config_file(config)
+def main():
+    if not os.path.exists('./config.ini'):
+        print('No configuraton file found. Creating one:')
+        config = configparser.ConfigParser()
+        config['host'] = {}
+        config['user'] = {}
+        config['system'] = {}
+        config['host']['hostname'] = gethost()
+        config['host']['usercount'] = '1'
+        config['user']['selfid'] = '1'
+        config['user']['user_card_url'] = ''
+        config['system']['threadcount'] = '75'
+        save_config_file(config)
+
+if __name__ == '__main__':
+    main()
