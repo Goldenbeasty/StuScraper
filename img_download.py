@@ -10,7 +10,6 @@ config_data.read('config.ini')
 host = config_data['host']['hostname'] + '_'
 
 usrcount = config_data['host']['usercount']
-# open the file hostname_userid and read and import 
 failedlist = []
 
 def getfile(config, uid):
@@ -32,7 +31,6 @@ def download_image_and_save(indata):
 def downloadicons(config):
     threadcount = int(config['system']['threadcount'])
     list_of_links = []
-    # get the avatar max from
     for user in range(int(usrcount)):
         try:
             user = user + 1
@@ -46,7 +44,5 @@ def downloadicons(config):
     for res in response:
         print(res)
 
-
-    
 if __name__ == '__main__':
     downloadicons(config_data)
