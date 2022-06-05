@@ -159,3 +159,4 @@ test*
 .vscode
 config.ini
 cookiejar
+/icons/
