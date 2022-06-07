@@ -13,7 +13,7 @@ import os
 import bootstrap
 bootstrap.main()
 
-import request
+import stu_download
 import search
 import usercounter
 
@@ -391,5 +391,5 @@ while True:
                 # check if folder users exists
                 if not os.path.isdir('./users'):
                     os.mkdir('./users')
-                request.downloaddb(config)
+                stu_download.downloaddb(config)
                 input()
