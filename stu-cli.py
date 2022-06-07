@@ -16,6 +16,7 @@ bootstrap.main()
 import stu_download
 import search
 import usercounter
+import stu_imgdl
 
 config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
@@ -380,7 +381,7 @@ while True:
         elif menu_choice == 4:
             create_message()
         elif menu_choice == 5:
-            submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\nSelect choice: '))
+            submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\n 4) Download all avatar icons\nSelect choice: '))
             if submenu_choice == 1:
                 search.main(config)
                 input()
@@ -392,4 +393,7 @@ while True:
                 if not os.path.isdir('./users'):
                     os.mkdir('./users')
                 stu_download.downloaddb(config)
+                input()
+            elif submenu_choice == 4:
+                stu_imgdl.downloadicons(config)
                 input()

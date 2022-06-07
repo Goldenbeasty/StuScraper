@@ -29,6 +29,9 @@ def download_image_and_save(indata):
     return(id)
 
 def downloadicons(config):
+    if not os.path.isdir('./icons'):
+        os.mkdir('./icons')
+
     threadcount = int(config['system']['threadcount'])
     usrcount = config['host']['usercount']
     list_of_links = []
