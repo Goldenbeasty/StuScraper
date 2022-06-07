@@ -1,18 +1,18 @@
 import requests
-import os
-from multiprocessing.pool import ThreadPool
 import configparser
+import os
 import json
+from multiprocessing.pool import ThreadPool
+from time import time as timer
 
 config_data = configparser.ConfigParser(interpolation=None)
 config_data.read('config.ini')
-
 host = config_data['host']['hostname'] + '_'
 
-usrcount = config_data['host']['usercount']
 failedlist = []
 
 def getfile(config, uid):
+    host = config['host']['hostname'] + '_'
     with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + host + str(uid), 'r') as f:
         info = json.loads(f.read())
         f.close()
@@ -30,6 +30,7 @@ def download_image_and_save(indata):
 
 def downloadicons(config):
     threadcount = int(config['system']['threadcount'])
+    usrcount = config['host']['usercount']
     list_of_links = []
     for user in range(int(usrcount)):
         try:
@@ -40,9 +41,17 @@ def downloadicons(config):
         except KeyError:
             continue
 
+    starttime = timer()
     response = ThreadPool(threadcount).imap_unordered(download_image_and_save, list_of_links)
     for res in response:
         print(res)
+    elapsedtime = timer() - starttime
+    print(f"Elapsed Time: {elapsedtime}")
+    print(f"With avarage speed of {int(usrcount) / elapsedtime}")
+    if len(failedlist) != 0:
+        print('Failed: ' + str(len(failedlist)))
+        for failed in failedlist:
+            print(failed)
 
 if __name__ == '__main__':
     downloadicons(config_data)
