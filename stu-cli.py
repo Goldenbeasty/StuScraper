@@ -75,11 +75,11 @@ params = {
 
 if loginmethod == 1: #Needs testing, unsure if works
     data = f'data%5BUser%5D%5Busername%5D={username}&data%5BUser%5D%5Bpassword%5D={password}&data%5BUser%5D%5Bautologin_do%5D=on'
-    response = requestssession.post(f'https://{host}.ope.ee/auth/', headers=headers, params=params, cookies=cookies, data=data, verify=False)
+    response = requestssession.post(f'https://{host}.ope.ee/auth/', headers=headers, params=params, cookies=cookies, data=data)
 
 if loginmethod == 2:
     data = f'data%5BUser%5D%5Busername%5D={username}&data%5BUser%5D%5Bpassword%5D=&data%5BUser%5D%5Bautologin_do%5D=on'
-    first_response = requests.post(f'https://{host}.ope.ee/auth/smartid', headers=headers, params=params, cookies=cookies, data=data, verify=True)
+    first_response = requests.post(f'https://{host}.ope.ee/auth/smartid', headers=headers, params=params, cookies=cookies, data=data)
     first_response = json.loads(first_response.text)
     print(f"Your login code is: {first_response['data']['verification_code']}")    
 
@@ -90,7 +90,7 @@ if loginmethod == 2:
     data = 'smartid_state=' + urllib.parse.quote(first_response['data']['state'])
     answer = False
     while answer == False:
-        response = requestssession.post(f'https://{host}.ope.ee/auth/smartid/', headers=headers, params=params, cookies=cookies, data=data, verify=True)
+        response = requestssession.post(f'https://{host}.ope.ee/auth/smartid/', headers=headers, params=params, cookies=cookies, data=data)
         if len(response.text) == 0:
             webpage = requestssession.get(f'https://{host}.ope.ee')
             answer = True
@@ -139,12 +139,12 @@ def save_config_file():
 
 def logout():
     os.remove('cookiejar')
-    requestssession.get(f'https://{host}.ope.ee/auth/logout', headers=headers, params=params, verify=True)
+    requestssession.get(f'https://{host}.ope.ee/auth/logout', headers=headers, params=params)
     quit("Logged out")
 
 # Get raw post html using the post id
 def getrawpost(message_id):
-    page = requestssession.get(f'https://{host}.ope.ee/suhtlus/api/posts/get/{message_id}', headers=headers, params=params, cookies=cookies, verify=True)
+    page = requestssession.get(f'https://{host}.ope.ee/suhtlus/api/posts/get/{message_id}', headers=headers, params=params, cookies=cookies)
     return page
 
 # Get JSON formatted chats page
@@ -154,14 +154,14 @@ def get_chatpage():
 
 # Display message body
 def displaymessage(message_id):
-    page = requestssession.get(f'https://{host}.ope.ee/suhtlus/api/posts/get/{message_id}', headers=headers, cookies=cookies, verify=True)
+    page = requestssession.get(f'https://{host}.ope.ee/suhtlus/api/posts/get/{message_id}', headers=headers, cookies=cookies)
     page = json.loads(page.text)
     print(page['post']['title'])
     print(page['post']['user_name_first'], page['post']['user_name_last'], end='\n\n\n')
     print(page['post']['body'])
     if page['post']['comment_count'] != 0 :
         print('\n\nComments:')
-        comments = requestssession.get(f"https://{host}.ope.ee/suhtlus/api/{page['next_comments_url']}", headers=headers, cookies=cookies, verify=True)
+        comments = requestssession.get(f"https://{host}.ope.ee/suhtlus/api/{page['next_comments_url']}", headers=headers, cookies=cookies)
         comments = json.loads(comments.text)
         for comment in comments:
             print(comment['user_name_first'], comment['user_name_last'])
@@ -197,7 +197,7 @@ def update_usercount():
 
 # Update user data from chats page config
 def update_user_data():
-    chat_response = requestssession.get(f'https://{host}.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
+    chat_response = requestssession.get(f'https://{host}.ope.ee/suhtlus/', headers=headers, cookies=cookies)
 
     parsedinput = BeautifulSoup(chat_response.text, "lxml")
     meta_config = parsedinput.head.find('meta', attrs={'name':"suhtlus:config"}).get('content')
@@ -215,7 +215,7 @@ def gethomepage():
     global parsed_homepage
     global last_homepage_fetch
     if (time() - last_homepage_fetch) > 20:
-        homepage = requestssession.get(f"https://{host}.ope.ee/s/{config['user']['selfid']}", headers=headers, cookies=cookies, verify=True)
+        homepage = requestssession.get(f"https://{host}.ope.ee/s/{config['user']['selfid']}", headers=headers, cookies=cookies)
         last_homepage_fetch = time()
         parsed_homepage = BeautifulSoup(homepage.text, "lxml")
     return parsed_homepage
@@ -276,14 +276,14 @@ def send_message(Title, Message, subjects):
     }
     data = data | subjects
 
-    response = requestssession.post(f'https://{host}.ope.ee/suhtlus/api/posts/edit', headers=headers, params=params, cookies=cookies, data=data, verify=True)
+    response = requestssession.post(f'https://{host}.ope.ee/suhtlus/api/posts/edit', headers=headers, params=params, cookies=cookies, data=data)
     if response.status_code == 200:
         print('Message sent!')
     else:
         print('Error sending message!')
 
 def get_xuid_token():
-    chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies, verify=True)
+    chat_response = requestssession.get('https://tamme.ope.ee/suhtlus/', headers=headers, cookies=cookies)
     parsedinput = BeautifulSoup(chat_response.text, "lxml")
     meta_config = parsedinput.head.find('meta', attrs={'name':"suhtlus:config"}).get('content')
     xuid_token = json.loads(meta_config)['user']['token']
