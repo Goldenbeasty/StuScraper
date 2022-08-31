@@ -13,12 +13,19 @@ import os
 import json
 from multiprocessing.pool import ThreadPool
 from time import time as timer
+from PIL import Image
 
 config_data = configparser.ConfigParser(interpolation=None)
 config_data.read('config.ini')
 host = config_data['host']['hostname'] + '_'
 
 failedlist = []
+
+def folder_pathcheck(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    else:
+        return
 
 def getfile(config, uid):
     host = config['host']['hostname'] + '_'
@@ -65,5 +72,29 @@ def downloadicons(config):
         for failed in failedlist:
             print(failed)
 
+def sort_default_images():
+    
+    folder_pathcheck("./sorted_images/defaults/")
+    folder_pathcheck("./sorted_images/customs/")
+    folder_pathcheck("./sorted_images/fails/")
+
+    path_to_images = "./icons/"
+    default_colors = [(70,70,70),(255,255,255)]
+    for imagepath in os.listdir(path_to_images):
+        try:
+            image = Image.open(path_to_images + imagepath)
+            pix = image.getpixel((200,200))
+            if pix in default_colors:
+                with open("./sorted_images/defaults/" + imagepath, "wb") as outfile:
+                    outfile.write(open(path_to_images + imagepath, "rb").read())
+            else:
+                with open("./sorted_images/customs/" + imagepath, "wb") as outfile:
+                    outfile.write(open(path_to_images + imagepath, "rb").read())
+        except OSError:
+            with open("./sorted_images/fails/" + imagepath, "wb") as outfile:
+                outfile.write(open(path_to_images + imagepath, "rb").read())
+
+
 if __name__ == '__main__':
     downloadicons(config_data)
+    sort_default_images()

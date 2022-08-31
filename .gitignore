@@ -161,3 +161,4 @@ config.ini
 cookiejar
 /icons/
 user_database.json
+sorted_images/

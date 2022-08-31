@@ -390,7 +390,7 @@ while True:
         elif menu_choice == 4:
             create_message()
         elif menu_choice == 5:
-            submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\n 4) Download all avatar icons\n 5) Create/update single file database\nSelect choice: '))
+            submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\n 4) Download all avatar icons\n 5) Create/update single file database\n 6) Sort custom images\nSelect choice: '))
             if submenu_choice == 1:
                 search.main(config)
                 input()
@@ -408,3 +408,6 @@ while True:
                 input()
             elif submenu_choice == 5:
                 dbmanipulation.consentrate_db(config)
+            elif submenu_choice == 6:
+                print("""Not 100% accruate""")
+                stu_imgdl.sort_default_images()
