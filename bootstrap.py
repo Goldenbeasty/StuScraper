@@ -12,6 +12,30 @@ import configparser
 import requests
 import json
 
+def licence_agreement():
+    arg = None
+    while arg != '':
+        os.system('clear')
+        arg = input("""
+StuScraper is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+StuScraper is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+[Enter to continue, q to quit]
+""")
+        if arg == 'q':
+            exit()
+
+    os.system('clear')
+    arg = None
+    while arg != 'y':
+        with open('./LICENCE', 'r') as licencefile:
+            print(licencefile.read())
+        arg = input("\n\n[y to agree, q to quit]\n")
+        if arg == 'q':
+            exit()
+    return
+
 def save_config_file(config):
     with open ('config.ini', 'w') as configfile:
         config.write(configfile)
@@ -41,6 +65,7 @@ def gethost():
 
 def main():
     if not os.path.exists('./config.ini'):
+        licence_agreement()
         print('No configuraton file found. Creating one:')
         config = configparser.ConfigParser()
         config['host'] = {}
