@@ -88,13 +88,17 @@ def sort_default_images():
                 with open("./sorted_images/defaults/" + imagepath, "wb") as outfile:
                     outfile.write(open(path_to_images + imagepath, "rb").read())
             else:
-                with open("./sorted_images/customs/" + imagepath, "wb") as outfile:
-                    outfile.write(open(path_to_images + imagepath, "rb").read())
+                if Image.MIME[image.format] == 'image/jpeg':
+                    with open("./sorted_images/customs/" + imagepath, "wb") as outfile:
+                        outfile.write(open(path_to_images + imagepath, "rb").read())
+                else:
+                    with open("./sorted_images/customs/" + imagepath.split(".")[0] + ".png", "wb") as outfile:
+                        outfile.write(open(path_to_images + imagepath, "rb").read())
         except OSError:
             with open("./sorted_images/fails/" + imagepath, "wb") as outfile:
                 outfile.write(open(path_to_images + imagepath, "rb").read())
 
 
 if __name__ == '__main__':
-    downloadicons(config_data)
+    # downloadicons(config_data)
     sort_default_images()
