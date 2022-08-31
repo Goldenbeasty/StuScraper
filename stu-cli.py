@@ -25,6 +25,7 @@ import stu_download
 import search
 import usercounter
 import stu_imgdl
+import dbmanipulation
 
 config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
@@ -362,7 +363,7 @@ while True:
     2) Tera
     3) Suhtlus
     4) Loo sõnum
-    5) Search user
+    5) Database functions
     ''')
     
     menu_choice = input('Choose menu: ')
@@ -389,7 +390,7 @@ while True:
         elif menu_choice == 4:
             create_message()
         elif menu_choice == 5:
-            submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\n 4) Download all avatar icons\nSelect choice: '))
+            submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\n 4) Download all avatar icons\n 5) Create/update single file database\nSelect choice: '))
             if submenu_choice == 1:
                 search.main(config)
                 input()
@@ -405,3 +406,5 @@ while True:
             elif submenu_choice == 4:
                 stu_imgdl.downloadicons(config)
                 input()
+            elif submenu_choice == 5:
+                dbmanipulation.consentrate_db(config)
