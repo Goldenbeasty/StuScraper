@@ -32,7 +32,7 @@ def download_image_and_save(indata):
     r = requests.get(link)
     if r.status_code != 200:
         failedlist.append(link)
-    with open(os.path.dirname(os.path.abspath(__file__)) + '/icons/' + host + str(id) + '.png', 'wb') as f:
+    with open(os.path.dirname(os.path.abspath(__file__)) + '/icons/' + host + str(id) + '.jpg', 'wb') as f:
         f.write(r.content)
         f.close()
     return(id)
