@@ -359,6 +359,8 @@ update_user_data()
 if os.path.exists('./user_database.json'):
     data = json.load(open('./user_database.json'))
     print(f"User database last updated {int((time() - int(data['last_updated'])) / 86400)} day(s) ago")
+else:
+    print("No database detected, many functions require the downloaded database, you can do it by choosing 5")
 
 
 while True:
@@ -367,7 +369,11 @@ while True:
     2) Tera
     3) Suhtlus
     4) Loo sõnum
-    5) Database functions
+    5) Automatic database management
+    6) Manual database functions
+
+    l) logout
+    q) quit
     ''')
     
     menu_choice = input('Choose menu: ')
@@ -394,6 +400,12 @@ while True:
         elif menu_choice == 4:
             create_message()
         elif menu_choice == 5:
+            update_usercount()
+            stu_download.downloaddb(config)
+            dbmanipulation.consentrate_db(config)
+            print("\nUpdated database!")
+            input()
+        elif menu_choice == 6:
             submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\n 4) Download all avatar icons\n 5) Create/update single file database\n 6) Sort custom images\nSelect choice: '))
             if submenu_choice == 1:
                 search.main(config)
