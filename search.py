@@ -18,11 +18,10 @@ config.read('config.ini')
 host = config['host']['hostname'] + '_'
 
 # Return user data by id
-def id_search(uid):
-    with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + host + str(uid), 'r') as file: # os.path etc. could be taken into a variable
-        response = json.loads(file.read())
-        file.close()
-    return response
+def id_search(uid:int, data, config=config):
+    for user in data[config['host']['hostname']]:
+        if int(user['id']) == uid:
+            return user
 
 # Return all matching user IDs as an array in a asssending order
 def username_search(query, config=config):
@@ -36,11 +35,12 @@ def username_search(query, config=config):
     return response
 
 def get_user_by_description(config, query):
+    data = json.load(open('./user_database.json', 'r'))
     query = str(query).lower()
     usercout = int(config['host']['usercount'])
     response = []
     for i in range(usercout):
-        for item in id_search(i + 1)['user_type_labels']:
+        for item in id_search(i + 1, data=data, config=config)['user_type_labels']:
             if str(query).lower() in str(item).lower():
                 response.append(i + 1)
     return response
@@ -48,11 +48,12 @@ def get_user_by_description(config, query):
 def main(config):
     list = username_search(str(input('Insert query: ').capitalize()), config=config)
     print('\n')
+    data = json.load(open('./user_database.json', 'r'))
 
     for user in list:
         descriprion = ''
 
-        userdata = id_search(user)
+        userdata = id_search(user, data=data, config=config)
         names = f'{userdata["name_first"]} {userdata["name_last"]}'
 
         if userdata['user_type_labels'] != None:
