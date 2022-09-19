@@ -24,36 +24,29 @@ def id_search(uid):
         file.close()
     return response
 
-# Return all matching user IDs as an array
-def username_search(querry, usercount):
-    tmp = []
-
+# Return all matching user IDs as an array in a asssending order
+def username_search(query, config=config):
     response = []
-    for i in range(usercount):
-        i = i + 1
-        with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + host + str(i),'r') as file:
-            tmp.append(json.loads(file.read()))
-            file.close()
-    for i in range(usercount - 1):
-        i = i + 1
-        if querry in tmp[i]['name_first'] or querry in tmp[i]['name_last']:
-            response.append(tmp[i]['id'])
+    data = json.load(open('user_database.json', 'r'))
+
+    for user in data[config['host']['hostname']]:
+        if query.lower() in user['name_first'].lower() + ' ' + user['name_last'].lower():
+            response.append(int(user['id']))
+    response.sort()
     return response
 
-def get_user_by_description(config, querry):
-    querry = str(querry).lower()
+def get_user_by_description(config, query):
+    query = str(query).lower()
     usercout = int(config['host']['usercount'])
     response = []
     for i in range(usercout):
         for item in id_search(i + 1)['user_type_labels']:
-            if str(querry).lower() in str(item).lower():
+            if str(query).lower() in str(item).lower():
                 response.append(i + 1)
     return response
 
 def main(config):
-    usercount = int(config['host']['usercount'])
-
-    list = username_search(str(input('Insert querry: ').capitalize()), usercount=usercount)
+    list = username_search(str(input('Insert query: ').capitalize()), config=config)
     print('\n')
 
     for user in list:
