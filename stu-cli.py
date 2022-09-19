@@ -356,6 +356,10 @@ def create_message():
 
 # update configuraiton file and greet user
 update_user_data()
+if os.path.exists('./user_database.json'):
+    data = json.load(open('./user_database.json'))
+    print(f"User database last updated {int((time() - int(data['last_updated'])) / 86400)} day(s) ago")
+
 
 while True:
     print('''
