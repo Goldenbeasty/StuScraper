@@ -433,7 +433,15 @@ while True:
             print("\nUpdated database!")
             input()
         elif menu_choice == 6:
-            submenu_choice = int(input(' 1) Search for name\n 2) Update usercount\n 3) Update local database\n 4) Download all avatar icons\n 5) Create/update single file database\n 6) Sort custom images\nSelect choice: '))
+            submenu_choice = int(input('''
+    1) Search for name
+    2) Update usercount
+    3) Update local database
+    4) Download all avatar icons
+    5) Create/update single file database
+    6) Sort custom images
+
+Select choice: '''))
             if submenu_choice == 1:
                 search.main(config)
                 input()

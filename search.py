@@ -10,7 +10,6 @@
 
 import configparser
 import json
-import os
 
 config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
