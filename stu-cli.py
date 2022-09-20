@@ -18,6 +18,10 @@ from getpass import getpass
 import pickle
 import os
 
+###################
+### Local files ###
+###################
+
 import bootstrap
 bootstrap.main()
 
@@ -27,12 +31,22 @@ import usercounter
 import stu_imgdl
 import dbmanipulation
 
+
+##############################
+### Standard configuration ###
+##############################
+
 config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
 host = config['host']['hostname']
 requestssession = requests.Session()
 
 last_homepage_fetch = 0
+
+
+#############
+### Login ###
+#############
 
 loginmethod = int(input(' 1) Password\n 2) Smart-ID\n 3) Existing session\nSelect login method: '))
 
@@ -139,6 +153,11 @@ params = {
 # After receiving the session token dump the cookies to a file
 with open('cookiejar', 'wb') as f:
     pickle.dump(requestssession.cookies, f)
+
+
+#################
+### Functions ### 
+#################
 
 # Save config file after changes
 def save_config_file():
@@ -249,6 +268,9 @@ def gethomework():
         print(i.text.replace('\n',' ').replace('https://',' https://'),end='\n\n')
 
 
+#########################
+### Message functions ###
+#########################
 
 def send_message(Title, Message, subjects):
     headers = {
@@ -353,6 +375,11 @@ def create_message():
         elif choice == 'l':
             print(f"Total of {len(subjects)} subjects")
             print(subjects)
+
+
+#################
+### Main loop ###
+#################
 
 # update configuraiton file and greet user
 update_user_data()
