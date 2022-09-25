@@ -81,22 +81,23 @@ def sort_default_images():
     path_to_images = "./icons/"
     default_colors = [(70,70,70),(255,255,255)]
     for imagepath in os.listdir(path_to_images):
-        try:
-            image = Image.open(path_to_images + imagepath)
-            pix = image.getpixel((200,200))
-            if pix in default_colors:
-                with open("./sorted_images/defaults/" + imagepath, "wb") as outfile:
-                    outfile.write(open(path_to_images + imagepath, "rb").read())
-            else:
-                if Image.MIME[image.format] == 'image/jpeg':
-                    with open("./sorted_images/customs/" + imagepath, "wb") as outfile:
+        if os.path.isfile(imagepath):
+            try:
+                image = Image.open(path_to_images + imagepath)
+                pix = image.getpixel((200,200))
+                if pix in default_colors:
+                    with open("./sorted_images/defaults/" + imagepath, "wb") as outfile:
                         outfile.write(open(path_to_images + imagepath, "rb").read())
                 else:
-                    with open("./sorted_images/customs/" + imagepath.split(".")[0] + ".png", "wb") as outfile:
-                        outfile.write(open(path_to_images + imagepath, "rb").read())
-        except OSError:
-            with open("./sorted_images/fails/" + imagepath, "wb") as outfile:
-                outfile.write(open(path_to_images + imagepath, "rb").read())
+                    if Image.MIME[image.format] == 'image/jpeg':
+                        with open("./sorted_images/customs/" + imagepath, "wb") as outfile:
+                            outfile.write(open(path_to_images + imagepath, "rb").read())
+                    else:
+                        with open("./sorted_images/customs/" + imagepath.split(".")[0] + ".png", "wb") as outfile:
+                            outfile.write(open(path_to_images + imagepath, "rb").read())
+            except OSError:
+                with open("./sorted_images/fails/" + imagepath, "wb") as outfile:
+                    outfile.write(open(path_to_images + imagepath, "rb").read())
 
 
 if __name__ == '__main__':
