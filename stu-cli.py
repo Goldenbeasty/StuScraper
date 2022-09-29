@@ -17,6 +17,7 @@ import configparser
 from getpass import getpass
 import pickle
 import os
+import re
 
 ###################
 ### Local files ###
@@ -107,7 +108,7 @@ if loginmethod == 2:
     print(f"Your login code is: {first_response['data']['verification_code']}")    
 
     params = {
-        'smartidsig': first_response['data']['status_url'][26:66],  #subject to being broken five times over
+        'smartidsig': re.findall(r"=(\S+)&", first_response['data']['status_url']),
         'lang': 'et',
     }
     data = 'smartid_state=' + urllib.parse.quote(first_response['data']['state'])
