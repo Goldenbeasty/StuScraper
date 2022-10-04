@@ -16,6 +16,18 @@ config = configparser.ConfigParser(interpolation=None)
 config.read('config.ini')
 host = config['host']['hostname']
 
+def convert_db_version_1_to_2(database):
+    new_db = {}
+    new_db[object] = 2
+    for object in database:
+        if object == 'last_updated':
+            new_db[object] = object
+        elif type(database[object]) == list:
+            new_db[object] = {}
+            for element in database[object]:
+                new_db[object][element['id']] = element
+    return new_db
+
 def consentrate_db(config):
     individual_userdb = "./users/"
 
@@ -27,24 +39,31 @@ def consentrate_db(config):
         user_database = json.load(open("user_database.json", "r"))
     else:
         user_database = {}
+        user_database['db_version'] = 2
     
+    try:
+        db_version = user_database['db_version']
+    except KeyError:
+        db_version = 1
+        ans = input("Your json database will be converted to version 2, no data loss will occur, you can press q to cancel")
+        if ans == 'q':
+            quit("Please back up your json database as old versions of the database are not supported!")
+        user_database = convert_db_version_1_to_2(user_database)
+
     user_database['last_updated'] = int(time.time())
 
     hostname = config['host']['hostname']
     if not hostname in user_database:
-        user_database[hostname] = []
+        user_database[hostname] = {}
 
     for file in os.listdir(individual_userdb):
         if hostname in file:
             individual_user = json.load(open(individual_userdb + file))
-            user_exists = False
-            for db_user in user_database[hostname]:
-                if individual_user['id'] == db_user['id']:
-                    user_exists = True
-                    db_user = individual_user
-                    break
-            if user_exists == False:
-                user_database[hostname].append(individual_user)
+            try:
+                for object in individual_user:
+                    user_database[hostname][individual_user['id']][object] = individual_user[object]
+            except KeyError:
+                user_database[hostname][individual_user['id']] = individual_user
 
     with open("user_database.json", "w") as userdb_file:
         json.dump(user_database, userdb_file, indent=4)
