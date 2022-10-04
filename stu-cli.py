@@ -112,12 +112,12 @@ if loginmethod == 2:
         'lang': 'et',
     }
     data = 'smartid_state=' + urllib.parse.quote(first_response['data']['state'])
-    answer = False
-    while answer == False:
+    list_of_returned_users = False
+    while list_of_returned_users == False:
         response = requestssession.post(f'https://{host}.ope.ee/auth/smartid/', headers=headers, params=params, cookies=cookies, data=data)
         if len(response.text) == 0:
             webpage = requestssession.get(f'https://{host}.ope.ee')
-            answer = True
+            list_of_returned_users = True
         sleep(2)
 
     page = requestssession.get(response.headers['x-redirect'], cookies=cookies)
@@ -441,6 +441,7 @@ while True:
     4) Download all avatar icons
     5) Create/update single file database
     6) Sort custom images
+    7) Search by desctiption
 
 Select choice: '''))
             if submenu_choice == 1:
@@ -463,3 +464,9 @@ Select choice: '''))
             elif submenu_choice == 6:
                 print("""Not 100% accruate""")
                 stu_imgdl.sort_default_images()
+            elif submenu_choice == 7:
+                os.system("clear")
+                description_query = input("Choose subject description: ")
+                list_of_returned_users = search.get_user_by_description(config, description_query)
+                print(f"\nTotal of {len(list_of_returned_users)} results\n")
+                search.list_users(config=config, list_of_users=list_of_returned_users)

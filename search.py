@@ -44,6 +44,24 @@ def get_user_by_description(config, query):
                 response.append(i + 1)
     return response
 
+def list_users(config, list_of_users):
+    data = json.load(open('./user_database.json', 'r'))
+    for user in list_of_users:
+        descriprion = ''
+
+        userdata = id_search(user, data=data, config=config)
+        names = f'{userdata["name_first"]} {userdata["name_last"]}'
+
+        if userdata['user_type_labels'] != None:
+            for i in range(len(userdata['user_type_labels'])):
+                descriprion += ' ' + userdata['user_type_labels'][i]
+                # if i is not the last element add a comma
+                if i != len(userdata['user_type_labels']) - 1:
+                    descriprion += ','
+
+        #print user id, names and description with uniform spacing in a form of a table
+        print(f'{userdata["id"]:<6} {names:<30} {descriprion:<20}')
+
 def main(config):
     list = username_search(str(input('Insert query: ').capitalize()), config=config)
     print('\n')
