@@ -45,10 +45,13 @@ def consentrate_db(config):
         db_version = user_database['db_version']
     except KeyError:
         db_version = 1
+
+    if db_version != 2:
         ans = input("Your json database will be converted to version 2, no data loss will occur, you can press q to cancel")
         if ans == 'q':
             quit("Please back up your json database as old versions of the database are not supported!")
-        user_database = convert_db_version_1_to_2(user_database)
+        if db_version == 1:
+            user_database = convert_db_version_1_to_2(user_database)
 
     user_database['last_updated'] = int(time.time())
 
