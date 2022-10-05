@@ -44,7 +44,6 @@ def save_config_file(config):
 def gethost():
     response = requests.get('https://assets.stuudium.net/_/config/clients')
     data = json.loads(response.text)
-    schools = []
 
     querry = input('Enter your school: ')
     hits = []
