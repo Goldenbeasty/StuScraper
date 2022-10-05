@@ -52,7 +52,6 @@ last_homepage_fetch = 0
 loginmethod = int(input(' 1) Password\n 2) Smart-ID\n 3) Existing session\nSelect login method: '))
 
 if loginmethod == 1:
-    print('Might not work')
     username = str(input('Sisesta nimi: '))
     username = username.replace(' ', '+')
     password = getpass('Sisesta parool: ')
