@@ -18,18 +18,17 @@ host = config['host']['hostname'] + '_'
 
 # Return user data by id
 def id_search(uid:int, data, config=config):
-    for user in data[config['host']['hostname']]:
-        if int(user['id']) == uid:
-            return user
+    return data[config['host']['hostname']][str(uid)]
 
 # Return all matching user IDs as an array in a asssending order
 def username_search(query, config=config):
     response = []
     data = json.load(open('user_database.json', 'r'))
 
-    for user in data[config['host']['hostname']]:
-        if query.lower() in user['name_first'].lower() + ' ' + user['name_last'].lower():
-            response.append(int(user['id']))
+    for uid in data[config['host']['hostname']]:
+        userdata = data[config['host']['hostname']][uid]
+        if query.lower() in userdata['name_first'].lower() + ' ' + userdata['name_last'].lower():
+            response.append(int(uid))
     response.sort()
     return response
 
@@ -63,7 +62,7 @@ def list_users(config, list_of_users):
         print(f'{userdata["id"]:<6} {names:<30} {descriprion:<20}')
 
 def main(config):
-    list = username_search(str(input('Insert query: ').capitalize()), config=config)
+    list = username_search(str(input('Insert query: ')), config=config)
     print('\n')
     data = json.load(open('./user_database.json', 'r'))
 
