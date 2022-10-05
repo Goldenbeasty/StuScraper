@@ -18,7 +18,7 @@ host = config['host']['hostname']
 
 def convert_db_version_1_to_2(database):
     new_db = {}
-    new_db[object] = 2
+    new_db['db_version'] = 2
     for object in database:
         if object == 'last_updated':
             new_db[object] = object
