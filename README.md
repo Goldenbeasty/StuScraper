@@ -23,4 +23,4 @@ StuScraper is distributed in the hope that it will be useful, but WITHOUT ANY WA
 
 You should have received a copy of the GNU General Public License along with StuScraper. If not, see <https://www.gnu.org/licenses/>. 
 
-Copyright by 
+Copyright by Goldenbeasty
