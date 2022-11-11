@@ -466,6 +466,7 @@ Select choice: '''))
             elif submenu_choice == 7:
                 os.system("clear")
                 description_query = input("Choose subject description: ")
+                print("")
                 list_of_returned_users = search.get_user_by_description(config, description_query)
-                print(f"\nTotal of {len(list_of_returned_users)} results\n")
                 search.list_users(config=config, list_of_users=list_of_returned_users)
+                print(f"\nTotal of {len(list_of_returned_users)} results\n")
