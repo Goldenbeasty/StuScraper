@@ -322,8 +322,7 @@ def get_xuid_token():
 
 # user interface to create and send messages
 def create_message():
-    subjects = {
-    }
+    subjects = {}
 
     composing_messsage = True
     while composing_messsage:
