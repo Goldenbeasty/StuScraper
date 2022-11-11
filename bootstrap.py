@@ -55,12 +55,12 @@ def gethost():
     for index, school in enumerate(hits):
         print(f"{index:>3}) {school['name']:<30}")
     
-    choise = input('Enter the number of the school: ')
+    choice = input('Enter the number of the school: ')
 
-    if choise == '':
-        choise = 0
+    if choice == '':
+        choice = 0
 
-    return hits[int(choise)]['client']
+    return hits[int(choice)]['client']
 
 def main():
     if not os.path.exists('./config.ini'):

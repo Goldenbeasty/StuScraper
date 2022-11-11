@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # This file is part of StuScraper.
 
@@ -433,7 +433,7 @@ while True:
             print("\nUpdated database!")
             input()
         elif menu_choice == 6:
-            submenu_choice = int(input('''
+            submenu_choice = input('''
     1) Search for name
     2) Update usercount
     3) Update local database
@@ -442,31 +442,35 @@ while True:
     6) Sort custom images
     7) Search by desctiption
 
-Select choice: '''))
-            if submenu_choice == 1:
-                search.main(config)
-                input()
-            elif submenu_choice == 2:
-                update_usercount()
-                input()
-            elif submenu_choice == 3:
-                # check if folder users exists
-                if not os.path.isdir('./users'):
-                    os.mkdir('./users')
-                stu_download.downloaddb(config)
-                input()
-            elif submenu_choice == 4:
-                stu_imgdl.downloadicons(config)
-                input()
-            elif submenu_choice == 5:
-                dbmanipulation.consentrate_db(config)
-            elif submenu_choice == 6:
-                print("""Not 100% accruate""")
-                stu_imgdl.sort_default_images()
-            elif submenu_choice == 7:
-                os.system("clear")
-                description_query = input("Choose subject description: ")
-                print("")
-                list_of_returned_users = search.get_user_by_description(config, description_query)
-                search.list_users(config=config, list_of_users=list_of_returned_users)
-                print(f"\nTotal of {len(list_of_returned_users)} results\n")
+Select choice: ''')
+            if submenu_choice.isnumeric():
+                submenu_choice = int(submenu_choice)
+                if submenu_choice == 1:
+                    search.main(config)
+                    input()
+                elif submenu_choice == 2:
+                    update_usercount()
+                    input()
+                elif submenu_choice == 3:
+                    # check if folder users exists
+                    if not os.path.isdir('./users'):
+                        os.mkdir('./users')
+                    stu_download.downloaddb(config)
+                    input()
+                elif submenu_choice == 4:
+                    stu_imgdl.downloadicons(config)
+                    input()
+                elif submenu_choice == 5:
+                    dbmanipulation.consentrate_db(config)
+                elif submenu_choice == 6:
+                    print("""Not 100% accruate""")
+                    stu_imgdl.sort_default_images()
+                elif submenu_choice == 7:
+                    os.system("clear")
+                    description_query = input("Choose subject description: ")
+                    print("")
+                    list_of_returned_users = search.get_user_by_description(config, description_query)
+                    search.list_users(config=config, list_of_users=list_of_returned_users)
+                    print(f"\nTotal of {len(list_of_returned_users)} results\n")
+            else:
+                print("Invalid choice")
