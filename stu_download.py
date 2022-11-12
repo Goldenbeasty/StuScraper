@@ -33,6 +33,8 @@ def downloadbyid(id):
     return(id)
 
 def downloaddb(config):
+    if not os.path.isdir("./users/"):
+        os.mkdir("./users/")
     global config_data
     config_data = config
     usercount = config['host']['usercount']

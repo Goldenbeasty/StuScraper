@@ -451,9 +451,6 @@ Select choice: ''')
                     update_usercount()
                     input()
                 elif submenu_choice == 3:
-                    # check if folder users exists
-                    if not os.path.isdir('./users'):
-                        os.mkdir('./users')
                     stu_download.downloaddb(config)
                     input()
                 elif submenu_choice == 4:
