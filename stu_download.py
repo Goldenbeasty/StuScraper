@@ -36,6 +36,8 @@ def downloadbyid(id):
         return(id)
     except json.JSONDecodeError:
         failedlist.append(id)
+    except ConnectionError:
+        failedlist.append(id)
 
 def downloaddb(config):
     if not os.path.isdir("./users/"):
