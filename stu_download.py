@@ -23,16 +23,19 @@ failedlist = []
 saved_data = []
 
 def downloadbyid(id):
-    id = id + 1
-    r = requests.get(config_data['user']['user_card_url'].format(USERID=id))
-    if r.status_code != 200:
+    try:
+        id = id + 1
+        r = requests.get(config_data['user']['user_card_url'].format(USERID=id))
+        if r.status_code != 200:
+            failedlist.append(id)
+        #info = json.dumps(json.loads(r.text))
+        #with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + host + str(id), 'w') as f:
+        #    f.write(info)
+        #    f.close()
+        saved_data.append(r.json())
+        return(id)
+    except json.JSONDecodeError:
         failedlist.append(id)
-    #info = json.dumps(json.loads(r.text))
-    #with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + host + str(id), 'w') as f:
-    #    f.write(info)
-    #    f.close()
-    saved_data.append(r.json())
-    return(id)
 
 def downloaddb(config):
     if not os.path.isdir("./users/"):

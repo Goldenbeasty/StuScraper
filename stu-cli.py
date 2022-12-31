@@ -23,16 +23,29 @@ import re
 ### Local files ###
 ###################
 
-import bootstrap
-bootstrap.main()
+packagebuild = False
 
-import stu_download
-import search
-import usercounter
-import stu_imgdl
-import dbmanipulation
+if not packagebuild:
 
+    import bootstrap
+    bootstrap.main()
+    
+    import stu_download
+    import search
+    import usercounter
+    import stu_imgdl
+    import dbmanipulation
 
+else:
+    from . import bootstrap
+    bootstrap.main()
+    
+    from . import stu_download
+    from . import search
+    from . import usercounter
+    from . import stu_imgdl
+    from . import dbmanipulation
+    
 ##############################
 ### Standard configuration ###
 ##############################
