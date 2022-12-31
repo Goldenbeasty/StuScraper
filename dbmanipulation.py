@@ -77,7 +77,7 @@ def consentrate_db(config):
         json.dump(user_database, userdb_file, indent=4)
 
     #cleanup the old database
-    os.remove(".cache/dldata")
+    os.remove(".cache/dldata.json")
 
 if __name__ =='__main__':
     consentrate_db(config=config)
