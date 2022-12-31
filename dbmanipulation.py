@@ -29,11 +29,14 @@ def convert_db_version_1_to_2(database):
     return new_db
 
 def consentrate_db(config):
-    individual_userdb = "./users/"
-
-    if not os.path.exists(individual_userdb):
-        print(f"Folder {individual_userdb} does not exitst, consentrating database is not possible")
+    #individual_userdb = "./users/"
+    if not os.path.exists(".cache/dldata.json"):
+        print("No new data was found")
         return
+    # check if users directory and user_database.json exists along with it's version
+    #if not os.path.exists(individual_userdb):
+    #    print(f"Folder {individual_userdb} does not exitst, consentrating database is not possible")
+    #    return
     
     if os.path.exists("user_database.json"):
         user_database = json.load(open("user_database.json", "r"))
@@ -53,23 +56,28 @@ def consentrate_db(config):
         if db_version == 1:
             user_database = convert_db_version_1_to_2(user_database)
 
+    # update the database and set variables for database
     user_database['last_updated'] = int(time.time())
 
     hostname = config['host']['hostname']
     if not hostname in user_database:
         user_database[hostname] = {}
 
-    for file in os.listdir(individual_userdb):
-        if hostname in file:
-            individual_user = json.load(open(individual_userdb + file))
-            try:
-                for object in individual_user:
-                    user_database[hostname][individual_user['id']][object] = individual_user[object]
-            except KeyError:
-                user_database[hostname][individual_user['id']] = individual_user
+    # read files from directory and write them to the database
+    newdata = json.load(open(".cache/dldata.json"))
+    for individual_user in newdata:
+        try:
+            for object in individual_user:
+                user_database[hostname][individual_user['id']][object] = individual_user[object]
+        except KeyError:
+            user_database[hostname][individual_user['id']] = individual_user
 
+    # write the updated database
     with open("user_database.json", "w") as userdb_file:
         json.dump(user_database, userdb_file, indent=4)
+
+    #cleanup the old database
+    os.remove(".cache/dldata")
 
 if __name__ =='__main__':
     consentrate_db(config=config)

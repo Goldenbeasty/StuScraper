@@ -155,6 +155,7 @@ cython_debug/
 
 users
 tmp*
+debug*
 test*
 .vscode
 config.ini
@@ -162,3 +163,4 @@ cookiejar
 /icons/
 user_database.json
 sorted_images/
+.cache/

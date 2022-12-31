@@ -20,16 +20,18 @@ config_data.read('config.ini')
 
 host = config_data['host']['hostname'] + '_'
 failedlist = []
+saved_data = []
 
 def downloadbyid(id):
     id = id + 1
     r = requests.get(config_data['user']['user_card_url'].format(USERID=id))
     if r.status_code != 200:
         failedlist.append(id)
-    info = json.dumps(json.loads(r.text))
-    with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + host + str(id), 'w') as f:
-        f.write(info)
-        f.close()
+    #info = json.dumps(json.loads(r.text))
+    #with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + host + str(id), 'w') as f:
+    #    f.write(info)
+    #    f.close()
+    saved_data.append(r.json())
     return(id)
 
 def downloaddb(config):
@@ -49,6 +51,10 @@ def downloaddb(config):
     print(f"With avarage speed of {int(usercount) / elapsedtime}")
     if len(failedlist) != 0:
         print('Failed to get data for: ' + str(failedlist))
+    if not os.path.exists(".cache"):
+        os.mkdir(".cache")
+    with open(".cache/dldata.json", "w") as f:
+        json.dump(saved_data, f)
 
 if __name__ == '__main__':
     downloaddb(config_data)
