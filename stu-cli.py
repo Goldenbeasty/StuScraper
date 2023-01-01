@@ -19,11 +19,28 @@ import pickle
 import os
 import re
 
+
+##################
+### File paths ###
+##################
+
+packagebuild = False
+
+if packagebuild:
+    configpath = "~/.config/stuscraper/config.ini"
+    dbpath = "~/.config/stuscraper/user_database.json"
+    cachepath = "~/.cache/stuscraper/"
+    cookiejarpath = "~/.config/stuscraper/cookiejar"
+else:
+    configpath = "config.ini"
+    dbpath = "user_database.json"
+    cachepath = ".cache"
+    cookiejarpath = "cookiejar"
+
+
 ###################
 ### Local files ###
 ###################
-
-packagebuild = False
 
 if not packagebuild: # auxilarary packages in this project default to packagebuild = False, because the projcet is not currently meant for use as a dependency. If you feel inclined to use it as a dependency for other projects feel free to leave a issue at the repo!
     import bootstrap
@@ -45,20 +62,10 @@ else:
     from . import stu_imgdl
     from . import dbmanipulation
     
+
 ##############################
 ### Standard configuration ###
 ##############################
-
-if packagebuild:
-    configpath = "~/.config/stuscraper/config.ini"
-    dbpath = "~/.config/stuscraper/user_database.json"
-    cachepath = "~/.cache/stuscraper/"
-    cookiejarpath = "~/.config/stuscraper/cookiejar"
-else:
-    configpath = "config.ini"
-    dbpath = "user_database.json"
-    cachepath = ".cache"
-    cookiejarpath = "cookiejar"
 
 config = configparser.ConfigParser(interpolation=None)
 config.read(configpath)

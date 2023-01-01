@@ -12,7 +12,7 @@ import configparser
 import requests
 import json
 
-def licence_agreement():
+def licence_agreement(packagebuild):
     arg = None
     while arg != '':
         os.system('clear')
@@ -28,6 +28,7 @@ StuScraper is distributed in the hope that it will be useful, but WITHOUT ANY WA
 
     os.system('clear')
     arg = None
+    if packagebuild: return #it being a packagebuild does not mean that it is licenced differently. The licence can still be found at 
     while arg != 'y':
         with open('./LICENCE', 'r') as licencefile:
             print(licencefile.read())
