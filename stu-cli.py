@@ -50,11 +50,15 @@ else:
 ##############################
 
 if packagebuild:
-    configpath = "config.ini"
-    dbpath = "user_database.json"
-else:
     configpath = "~/.config/stuscraper/config.ini"
     dbpath = "~/.config/stuscraper/user_database.json"
+    cachepath = "~/.cache/stuscraper/"
+    cookiejarpath = "~/.config/stuscraper/cookiejar"
+else:
+    configpath = "config.ini"
+    dbpath = "user_database.json"
+    cachepath = ".cache"
+    cookiejar = "cookiejar"
 
 config = configparser.ConfigParser(interpolation=None)
 config.read(configpath)
@@ -446,7 +450,7 @@ while True:
             create_message()
         elif menu_choice == 5:
             update_usercount()
-            stu_download.downloaddb(config)
+            stu_download.downloaddb(config, cachepath)
             dbmanipulation.consentrate_db(config, dbpath)
             print("\nUpdated database!")
             input()
@@ -470,7 +474,7 @@ Select choice: ''')
                     update_usercount()
                     input()
                 elif submenu_choice == 3:
-                    stu_download.downloaddb(config)
+                    stu_download.downloaddb(config, cachepath)
                     input()
                 elif submenu_choice == 4:
                     stu_imgdl.downloadicons(config)

@@ -36,9 +36,7 @@ def downloadbyid(id):
     except ConnectionError:
         failedlist.append(id)
 
-def downloaddb(config):
-    if not os.path.isdir("./users/"):
-        os.mkdir("./users/")
+def downloaddb(config, cachepath=".cache/"):
     global config_data
     config_data = config
     usercount = config['host']['usercount']
@@ -53,9 +51,9 @@ def downloaddb(config):
     print(f"With avarage speed of {int(usercount) / elapsedtime}")
     if len(failedlist) != 0:
         print('Failed to get data for: ' + str(failedlist))
-    if not os.path.exists(".cache"):
-        os.mkdir(".cache")
-    with open(".cache/dldata.json", "w") as f:
+    if not os.path.exists(cachepath):
+        os.mkdir(cachepath)
+    with open(cachepath + "dldata.json", "w") as f:
         json.dump(saved_data, f)
 
 if __name__ == '__main__':

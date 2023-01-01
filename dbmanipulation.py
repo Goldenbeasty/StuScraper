@@ -25,7 +25,7 @@ def convert_db_version_1_to_2(database):
                 new_db[object][element['id']] = element
     return new_db
 
-def consentrate_db(config, dbpath="user_database.json"):
+def consentrate_db(config, dbpath="user_database.json", cachepath='.cache/'):
     if not os.path.exists(".cache/dldata.json"):
         print("No new data was found")
         return
