@@ -83,7 +83,8 @@ last_homepage_fetch = 0
 ### Login ###
 #############
 
-loginmethod = int(input(' 1) Password\n 2) Smart-ID\n 3) Existing session\nSelect login method: '))
+print(f"logging in to {host}") 
+loginmethod = int(input(' 1) Password\n 2) Smart-ID\n 3) Existing session\n 4) Change school\nSelect login method: '))
 
 if loginmethod == 1:
     username = str(input('Sisesta nimi: '))
@@ -95,6 +96,12 @@ elif loginmethod == 2:
 elif loginmethod == 3:
     with open(cookiejarpath, 'rb') as f:
         requestssession.cookies.update(pickle.load(f))
+elif loginmethod == 4:
+    config['host']['hostname'] = bootstrap.gethost()
+    with open (configpath, "w") as f:
+        config.write(f)
+        f.close()
+    exit(f"Changed host to {config['host']['hostname']}")
 else:
     quit('Choice out of range')
 print('')

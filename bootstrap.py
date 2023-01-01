@@ -44,7 +44,7 @@ def save_config_file(config, configpath):
         configfile.close()
 
 def gethost():
-    response = requests.get('https://assets.stuudium.net/_/config/clients')
+    response = requests.get("https://stuudium.com/_/pweb/get-public-clients") # https://assets.stuudium.net/_/config/clients
     data = json.loads(response.text)
 
     querry = input('Enter your school: ')
