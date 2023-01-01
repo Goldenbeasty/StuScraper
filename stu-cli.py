@@ -58,7 +58,7 @@ else:
     configpath = "config.ini"
     dbpath = "user_database.json"
     cachepath = ".cache"
-    cookiejar = "cookiejar"
+    cookiejarpath = "cookiejar"
 
 config = configparser.ConfigParser(interpolation=None)
 config.read(configpath)
@@ -82,7 +82,7 @@ elif loginmethod == 2:
     username = str(input('Sisesta nimi: '))
     username = username.replace(' ', '+')
 elif loginmethod == 3:
-    with open('cookiejar', 'rb') as f:
+    with open(cookiejarpath, 'rb') as f:
         requestssession.cookies.update(pickle.load(f))
 else:
     quit('Choice out of range')
@@ -174,7 +174,7 @@ params = {
 }
 
 # After receiving the session token dump the cookies to a file
-with open('cookiejar', 'wb') as f:
+with open(cookiejarpath, 'wb') as f:
     pickle.dump(requestssession.cookies, f)
 
 
@@ -189,7 +189,7 @@ def save_config_file():
         configfile.close()
 
 def logout():
-    os.remove('cookiejar')
+    os.remove(cookiejarpath)
     requestssession.get(f'https://{host}.ope.ee/auth/logout', headers=headers, params=params)
     quit("Logged out")
 
