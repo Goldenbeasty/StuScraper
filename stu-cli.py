@@ -51,8 +51,10 @@ else:
 
 if packagebuild:
     configpath = "config.ini"
+    dbpath = "user_database.json"
 else:
     configpath = "~/.config/stuscraper/config.ini"
+    dbpath = "~/.config/stuscraper/user_database.json"
 
 config = configparser.ConfigParser(interpolation=None)
 config.read(configpath)
@@ -399,8 +401,8 @@ def create_message():
 
 # update configuraiton file and greet user
 update_user_data()
-if os.path.exists('./user_database.json'):
-    data = json.load(open('./user_database.json'))
+if os.path.exists(dbpath):
+    data = json.load(open(dbpath))
     print(f"User database last updated {int((time() - int(data['last_updated'])) / 86400)} day(s) ago")
 else:
     print("No database detected, many functions require the downloaded database, you can do it by choosing 5")
@@ -445,7 +447,7 @@ while True:
         elif menu_choice == 5:
             update_usercount()
             stu_download.downloaddb(config)
-            dbmanipulation.consentrate_db(config)
+            dbmanipulation.consentrate_db(config, dbpath)
             print("\nUpdated database!")
             input()
         elif menu_choice == 6:
@@ -474,7 +476,7 @@ Select choice: ''')
                     stu_imgdl.downloadicons(config)
                     input()
                 elif submenu_choice == 5:
-                    dbmanipulation.consentrate_db(config)
+                    dbmanipulation.consentrate_db(config, dbpath)
                 elif submenu_choice == 6:
                     print("""Not 100% accruate""")
                     stu_imgdl.sort_default_images()

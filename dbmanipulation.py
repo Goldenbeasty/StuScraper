@@ -25,7 +25,7 @@ def convert_db_version_1_to_2(database):
                 new_db[object][element['id']] = element
     return new_db
 
-def consentrate_db(config):
+def consentrate_db(config, dbpath="user_database.json"):
     if not os.path.exists(".cache/dldata.json"):
         print("No new data was found")
         return
@@ -34,8 +34,8 @@ def consentrate_db(config):
     #    print(f"Folder {individual_userdb} does not exitst, consentrating database is not possible")
     #    return
     
-    if os.path.exists("user_database.json"):
-        user_database = json.load(open("user_database.json", "r"))
+    if os.path.exists(dbpath):
+        user_database = json.load(open(dbpath, "r"))
     else:
         user_database = {}
         user_database['db_version'] = 2
@@ -69,7 +69,7 @@ def consentrate_db(config):
             user_database[hostname][individual_user['id']] = individual_user
 
     # write the updated database
-    with open("user_database.json", "w") as userdb_file:
+    with open(dbpath, "w") as userdb_file:
         json.dump(user_database, userdb_file, indent=4)
 
     #cleanup the old database
