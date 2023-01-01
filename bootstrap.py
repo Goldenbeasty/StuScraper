@@ -12,7 +12,7 @@ import configparser
 import requests
 import json
 
-def licence_agreement(packagebuild=False):
+def licence_agreement(packagebuild):
     arg = None
     while arg != '':
         os.system('clear')
@@ -65,12 +65,15 @@ def gethost():
 
 def main(packagebuild=False):
     if packagebuild:
-        configpath = "~/.config/stuscraper/config.ini"
+        configpath = os.path.expanduser("~/.config/stuscraper/config.ini")
     else:
         configpath = "config.ini"
-
+    
+    configdir = os.path.dirname(os.path.realpath(os.path.expanduser(configpath)))
     if not os.path.exists(configpath):
-        licence_agreement()
+        if not os.path.exists(configdir):
+            os.mkdir(configdir)
+        licence_agreement(packagebuild)
         print('No configuraton file found. Creating one:')
         config = configparser.ConfigParser()
         config['host'] = {}

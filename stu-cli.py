@@ -37,6 +37,10 @@ else:
     cachepath = ".cache/"
     cookiejarpath = "cookiejar"
 
+configpath = os.path.expanduser(configpath)
+dbpath = os.path.expanduser(dbpath)
+cachepath = os.path.expanduser(cachepath)
+cookiejarpath = os.path.expanduser(cookiejarpath)
 
 ###################
 ### Local files ###
