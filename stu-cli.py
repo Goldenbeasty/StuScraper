@@ -426,7 +426,7 @@ else:
 while True:
     print('''
     1) Päevik
-    2) Tera
+    2) Tera (not implemented)
     3) Suhtlus
     4) Loo sõnum
     5) Automatic database management
