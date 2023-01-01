@@ -20,9 +20,11 @@ Some outdated examples can be found at [examples](./assets/examples.md)
 
 OS - follows the UNIX filesystem, such as Linux and MacOS
 
-requirements: python3 and pip
+requirements: `python3` and `pip`
 
-```pip install --upgrade stuscraper```
+```
+pip install --upgrade stuscraper
+```
 
 To upgrade the package run the same command
 
@@ -30,17 +32,17 @@ To upgrade the package run the same command
 
 OS - all platform
 
-Clone the repository 
+Clone the repository and enter the directory
 
-```git clone https://github.com/goldenbeasty/stuscraper```
-
-enter the directory
-
-```cd stuscraper```
+```
+git clone https://github.com/goldenbeasty/stuscraper && cd stuscraper
+```
 
 and run `stu-cli.py`
 
-```python3 ./stu-cli.py```
+```
+python3 ./stu-cli.py
+```
 
 ## First time login
 
