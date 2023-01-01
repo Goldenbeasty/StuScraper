@@ -73,7 +73,7 @@ def consentrate_db(config, dbpath="user_database.json", cachepath='.cache/'):
         json.dump(user_database, userdb_file, indent=4)
 
     #cleanup the old database
-    os.remove(".cache/dldata.json")
+    os.remove(cachepath + "dldata.json")
 
 if __name__ =='__main__':
     config = configparser.ConfigParser(interpolation=None)
