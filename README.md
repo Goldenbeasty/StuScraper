@@ -1,21 +1,55 @@
 # StuScraper
 
-CLI tool for Stuudium
+CLI tool to scrape Stuudium's ope.ee sites for user information.
 
-WIP but implemented functions are: user database downloading, user search, chat viewing, creating messages, viewing grades and homework
+Requres an account on site.
+
+## Shoutout to Stuudium
+
+![ip_blocked](./assets/funny.webp)
 
 ## Stu-cli
 
-Currently logging in only works with Smart-ID and password
-More can be learnt in [examples](examples.md)
+login works with password and with Smart-ID.
+
+Some outdated examples can be found at [examples](./assets/examples.md)
+
+## Installation
+
+### Pip package
+
+OS - follows the UNIX filesystem, such as Linux and MacOS
+
+requirements: python3 and pip
+
+```pip install --upgrade stuscraper```
+
+To upgrade the package run the same command
+
+### Source
+
+OS - all platform
+
+Clone the repository 
+
+```git clone https://github.com/goldenbeasty/stuscraper```
+
+enter the directory
+
+```cd stuscraper```
+
+and run `stu-cli.py`
+
+```python3 ./stu-cli.py```
+
 ## First time login
 
-On the first login the script creates a config.ini file and sets up your school. The school search is the same as on the website, but you might encounter some test "schools", what should be ignored.
-If you want to log into another schools Stuudium just delete the config.ini file and run the script again.
+If you want to change what school's Stuudium you log into delete the config.ini file found at `~/.config/stuscraper/config.ini` or in case of source installation in the same folder as the program `./config.ini`
+The ability to do that in program will be added soon
 
 ## Licence
 
-Copyright 2022 Goldenbeasty
+Copyright 2023 Goldenbeasty
 
 StuScraper is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
