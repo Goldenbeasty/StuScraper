@@ -474,6 +474,7 @@ while True:
     5) Create/update single file database
     6) Sort custom images
     7) Search by desctiption
+    8) Individual user/file scraping (source installation only)
 
 Select choice: ''')
             if submenu_choice.isnumeric():
@@ -502,5 +503,20 @@ Select choice: ''')
                     list_of_returned_users = search.get_user_by_description(config, description_query)
                     search.list_users(config=config, list_of_users=list_of_returned_users)
                     print(f"\nTotal of {len(list_of_returned_users)} results\n")
-            else:
-                print("Invalid choice")
+                elif submenu_choice == 8:
+                    if packagebuild:
+                        print("This option is unavalable to installation via pip, download from source to enable individual file scraping")
+                        continue
+                    try: config["user"]["scraper"]
+                    except KeyError:
+                        config["user"]["scraper"] = "False"
+                        save_config_file()
+                    a = input(f"Scraping option is for people who wish to keep track of databases using git. Value toggles whether the scripts saves user databse to ./users/ folder as individual files. The suggested way to keep track is to use the user_database.json file and therefore this is a legacy feature.\n\n Currently set to {config['user']['scraper']}\n Do you wish to change it? [y/N]\n").lower()
+                    if a != 'y': continue
+                    if config["user"]["scraper"] == "False":
+                        config["user"]["scraper"] = "True"
+                    else:
+                        config["user"]["scraper"] = "False"
+                    save_config_file()
+                else:
+                    print("Invalid choice")

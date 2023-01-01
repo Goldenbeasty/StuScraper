@@ -35,6 +35,7 @@ StuScraper is distributed in the hope that it will be useful, but WITHOUT ANY WA
         arg = input("\n\n[y to agree, q to quit]\n")
         if arg == 'q':
             exit()
+    input("\n\nIf you wish to scrape data enable it in the menu (under manual database management)")
     return
 
 def save_config_file(config, configpath):

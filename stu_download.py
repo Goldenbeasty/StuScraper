@@ -25,10 +25,13 @@ def downloadbyid(id):
         r = requests.get(config_data['user']['user_card_url'].format(USERID=id))
         if r.status_code != 200:
             failedlist.append(id)
-        #info = json.dumps(json.loads(r.text))
-        #with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + host + str(id), 'w') as f:
-        #    f.write(info)
-        #    f.close()
+            return f"Failed {id}"
+        if save_to_disk != None:
+            info = r.json()
+            with open(os.path.dirname(os.path.abspath(__file__)) + '/users/' + save_to_disk + str(id), 'w') as f:
+                json.dump(info,f)
+                f.close()
+
         saved_data.append(r.json())
         return(id)
     except json.JSONDecodeError:
@@ -39,11 +42,17 @@ def downloadbyid(id):
 def downloaddb(config, cachepath=".cache/"):
     global config_data
     config_data = config
-    usercount = config['host']['usercount']
+    usercount = int(config['host']['usercount'])
     threadcount = int(config['system']['threadcount'])
     
     start = timer()
-    response = ThreadPool(threadcount).imap_unordered(downloadbyid, range(0, int(usercount)))
+    global save_to_disk
+    if config["user"]["scraper"] == "True":
+        save_to_disk = config["host"]["hostname"]
+    else:
+        save_to_disk = None
+    
+    response = ThreadPool(threadcount).imap_unordered(downloadbyid, range(0,usercount))
     for res in response:
         print(res)
     elapsedtime = timer() - start
