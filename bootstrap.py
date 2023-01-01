@@ -12,7 +12,7 @@ import configparser
 import requests
 import json
 
-def licence_agreement(packagebuild):
+def licence_agreement(packagebuild=False):
     arg = None
     while arg != '':
         os.system('clear')
