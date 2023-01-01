@@ -75,6 +75,8 @@ In the messaging section (as of 01.01.2023) you can react with emojis, currenttl
 It didn't use to be that way some time afte 15.01.2021 was the ability to react with any emoji removed. While you could react with any emoji some emojis were shadowbanned such as the eggplant emoji and the middle finger emoji.
 Any emoji reaction isn't removed from the backend and posts older than 15.01.2021 can still be seen with any emoji. About that, the API endpoint for emojis wasn't removed until at least 19.01.2022, until that point I was still able to react to a message with a custom emoji by manually editing the POST request. Subsequent tries have failed.
 
+![the last emoji](./assets/emoji.webp)
+
 ### other (technical)
 
 #### list of all schools
