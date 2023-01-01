@@ -29,9 +29,8 @@ StuScraper is distributed in the hope that it will be useful, but WITHOUT ANY WA
     os.system('clear')
     arg = None
     if packagebuild: return #it being a packagebuild does not mean that it is licenced differently. The licence can still be found at 
-    licencepath = os.path.dirname(os.path.realpath(__file__))
     while arg != 'y':
-        with open(licencepath + "LICENCE", "r") as licencefile:
+        with open('./LICENCE', 'r') as licencefile:
             print(licencefile.read())
         arg = input("\n\n[y to agree, q to quit]\n")
         if arg == 'q':
