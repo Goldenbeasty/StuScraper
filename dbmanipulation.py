@@ -12,9 +12,6 @@ import json
 import time
 import configparser
 
-config = configparser.ConfigParser(interpolation=None)
-config.read('config.ini')
-host = config['host']['hostname']
 
 def convert_db_version_1_to_2(database):
     new_db = {}
@@ -29,7 +26,6 @@ def convert_db_version_1_to_2(database):
     return new_db
 
 def consentrate_db(config):
-    #individual_userdb = "./users/"
     if not os.path.exists(".cache/dldata.json"):
         print("No new data was found")
         return
@@ -80,4 +76,8 @@ def consentrate_db(config):
     os.remove(".cache/dldata.json")
 
 if __name__ =='__main__':
+    config = configparser.ConfigParser(interpolation=None)
+    config.read('config.ini')
+
     consentrate_db(config=config)
+

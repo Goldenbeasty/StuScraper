@@ -25,8 +25,7 @@ import re
 
 packagebuild = False
 
-if not packagebuild:
-
+if not packagebuild: # auxilarary packages in this project default to packagebuild = False, because the projcet is not currently meant for use as a dependency. If you feel inclined to use it as a dependency for other projects feel free to leave a issue at the repo!
     import bootstrap
     bootstrap.main()
     
@@ -38,7 +37,7 @@ if not packagebuild:
 
 else:
     from . import bootstrap
-    bootstrap.main()
+    bootstrap.main(packagebuild=True)
     
     from . import stu_download
     from . import search
@@ -50,8 +49,13 @@ else:
 ### Standard configuration ###
 ##############################
 
+if packagebuild:
+    configpath = "config.ini"
+else:
+    configpath = "~/.config/stuscraper/config.ini"
+
 config = configparser.ConfigParser(interpolation=None)
-config.read('config.ini')
+config.read(configpath)
 host = config['host']['hostname']
 requestssession = requests.Session()
 
@@ -174,7 +178,7 @@ with open('cookiejar', 'wb') as f:
 
 # Save config file after changes
 def save_config_file():
-    with open ('config.ini', 'w') as configfile:
+    with open (configpath, 'w') as configfile:
         config.write(configfile)
         configfile.close()
 

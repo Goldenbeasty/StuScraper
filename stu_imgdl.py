@@ -16,10 +16,6 @@ from multiprocessing.pool import ThreadPool
 from time import time as timer
 from PIL import Image
 
-config_data = configparser.ConfigParser(interpolation=None)
-config_data.read('config.ini')
-host = config_data['host']['hostname'] + '_'
-
 failedlist = []
 
 def folder_pathcheck(path):
@@ -102,5 +98,8 @@ def sort_default_images():
 
 
 if __name__ == '__main__':
+    config_data = configparser.ConfigParser(interpolation=None)
+    config_data.read('config.ini')
+    host = config_data['host']['hostname'] + '_'
     # downloadicons(config_data)
     sort_default_images()

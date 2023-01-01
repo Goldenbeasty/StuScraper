@@ -36,8 +36,8 @@ StuScraper is distributed in the hope that it will be useful, but WITHOUT ANY WA
             exit()
     return
 
-def save_config_file(config):
-    with open ('config.ini', 'w') as configfile:
+def save_config_file(config, configpath):
+    with open (configpath, 'w') as configfile:
         config.write(configfile)
         configfile.close()
 
@@ -62,8 +62,13 @@ def gethost():
 
     return hits[int(choice)]['client']
 
-def main():
-    if not os.path.exists('./config.ini'):
+def main(packagebuild=False):
+    if packagebuild:
+        configpath = "~/.config/stuscraper/config.ini"
+    else:
+        configpath = "config.ini"
+
+    if not os.path.exists(configpath):
         licence_agreement()
         print('No configuraton file found. Creating one:')
         config = configparser.ConfigParser()
@@ -75,7 +80,7 @@ def main():
         config['user']['selfid'] = '1'
         config['user']['user_card_url'] = ''
         config['system']['threadcount'] = '75'
-        save_config_file(config)
+        save_config_file(config, configpath)
 
 if __name__ == '__main__':
     main()

@@ -11,17 +11,15 @@
 import configparser
 import json
 
-config = configparser.ConfigParser(interpolation=None)
-config.read('config.ini')
 
-host = config['host']['hostname'] + '_'
+#host = config['host']['hostname'] + '_'
 
 # Return user data by id
-def id_search(uid:int, data, config=config):
+def id_search(uid:int, data, config):
     return data[config['host']['hostname']][str(uid)]
 
 # Return all matching user IDs as an array in a asssending order
-def username_search(query, config=config):
+def username_search(query, config):
     response = []
     data = json.load(open('user_database.json', 'r'))
 
@@ -83,4 +81,8 @@ def main(config):
         print(f'{userdata["id"]:<6} {names:<30} {descriprion:<20}')
 
 if __name__ == '__main__':
+    configpath = "./config.ini"
+
+    config = configparser.ConfigParser(interpolation=None)
+    config.read(configpath)
     main(config)

@@ -15,10 +15,7 @@ import os
 from multiprocessing.pool import ThreadPool
 from time import time as timer
 
-config_data = configparser.ConfigParser(interpolation=None)
-config_data.read('config.ini')
 
-host = config_data['host']['hostname'] + '_'
 failedlist = []
 saved_data = []
 
@@ -62,4 +59,6 @@ def downloaddb(config):
         json.dump(saved_data, f)
 
 if __name__ == '__main__':
+    config_data = configparser.ConfigParser(interpolation=None)
+    config_data.read('config.ini')
     downloaddb(config_data)
