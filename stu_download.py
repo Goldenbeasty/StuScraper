@@ -46,6 +46,10 @@ def downloaddb(config, cachepath=".cache/"):
     threadcount = int(config['system']['threadcount'])
     
     start = timer()
+    try: config["user"]["scraper"] # This is just here as a legacy catch, could probably removed in 3 months or so
+    except KeyError:
+        config["user"]["scraper"] = "False"
+
     global save_to_disk
     if config["user"]["scraper"] == "True":
         save_to_disk = config["host"]["hostname"]

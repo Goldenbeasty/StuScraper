@@ -84,6 +84,7 @@ def main(packagebuild=False):
         config['host']['usercount'] = '1'
         config['user']['selfid'] = '1'
         config['user']['user_card_url'] = ''
+        config['user']['scraper'] = 'False'
         config['system']['threadcount'] = '75'
         save_config_file(config, configpath)
 
