@@ -34,7 +34,7 @@ if packagebuild:
 else:
     configpath = "config.ini"
     dbpath = "user_database.json"
-    cachepath = ".cache"
+    cachepath = ".cache/"
     cookiejarpath = "cookiejar"
 
 
