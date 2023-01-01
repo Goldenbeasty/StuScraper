@@ -26,7 +26,7 @@ def convert_db_version_1_to_2(database):
     return new_db
 
 def consentrate_db(config, dbpath="user_database.json", cachepath='.cache/'):
-    if not os.path.exists(".cache/dldata.json"):
+    if not os.path.exists(cachepath + "dldata.json"):
         print("No new data was found")
         return
     # check if users directory and user_database.json exists along with it's version
