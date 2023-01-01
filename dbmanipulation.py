@@ -60,7 +60,7 @@ def consentrate_db(config, dbpath="user_database.json", cachepath='.cache/'):
         user_database[hostname] = {}
 
     # read files from directory and write them to the database
-    newdata = json.load(open(".cache/dldata.json"))
+    newdata = json.load(open(cachepath + "dldata.json"))
     for individual_user in newdata:
         try:
             for object in individual_user:
