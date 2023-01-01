@@ -462,7 +462,7 @@ while True:
         elif menu_choice == 5:
             update_usercount()
             stu_download.downloaddb(config, cachepath)
-            dbmanipulation.consentrate_db(config, dbpath)
+            dbmanipulation.consentrate_db(config, dbpath, cachepath)
             print("\nUpdated database!")
             input()
         elif menu_choice == 6:
@@ -491,7 +491,7 @@ Select choice: ''')
                     stu_imgdl.downloadicons(config)
                     input()
                 elif submenu_choice == 5:
-                    dbmanipulation.consentrate_db(config, dbpath)
+                    dbmanipulation.consentrate_db(config, dbpath, cachepath)
                 elif submenu_choice == 6:
                     print("""Not 100% accruate""")
                     stu_imgdl.sort_default_images()
