@@ -50,7 +50,7 @@ if not packagebuild: # auxilarary packages in this project default to packagebui
     import bootstrap
     bootstrap.main()
     
-    import stu_download
+    import stu_download # soon to be deprecated due to fun circumstances
     import search
     import usercounter
     import stu_imgdl
@@ -416,6 +416,58 @@ def create_message():
             print(f"Total of {len(subjects)} subjects")
             print(subjects)
 
+#####################################
+### I am your benevolent dictator ###
+#####################################
+
+def make_userspace_message(trialcount=10000):
+    subjects = {}
+    for i in range(1, trialcount):
+        subjects[f'Post[recipients][{i}]'] = f'{host}-{i}-user'
+    
+    headers = {
+        'Host': f'{host}.ope.ee',
+        'Sec-Ch-Ua': '" Not A;Brand";v="99", "Chromium";v="96"',
+        'Sec-Ch-Ua-Mobile': '?0',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Accept': '*/*',
+        'X-User-Token': get_xuid_token(),
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-App-Type': 'web',
+        'Sec-Ch-Ua-Platform': '"Linux"',
+        'Origin': f'https://{host}.ope.ee',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Dest': 'empty',
+        'Referer': f'https://{host}.ope.ee/suhtlus/p/new',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'en-US,en;q=0.9',
+    }
+
+    params = {
+        'v': '2020',
+    }
+
+    data = {
+        'Post[title]':'',
+        'Post[event_date]':'',
+        'Post[event_time]':'',
+        'Post[event_date_end]':'',
+        'Post[event_time_end]':'',
+        'Post[body]':'',
+    }
+    data = data | subjects
+    r = requestssession.post(url=f"https://{host}.ope.ee/suhtlus/api/posts/edit?v=2020&save_draft=1", headers=headers, params=params, cookies=cookies, data=data)
+    rjson = r.json()
+    with open("debug_json.json", "w") as f:
+        json.dump(rjson, f)
+        f.close()
+    if not rjson["ok"]: exit(rjson)
+    id = rjson["data"]["id"]
+
+    return id
+
 
 #################
 ### Main loop ###
@@ -525,5 +577,7 @@ Select choice: ''')
                     else:
                         config["user"]["scraper"] = "False"
                     save_config_file()
+                elif submenu_choice == 11:
+                    print(make_userspace_message())
                 else:
                     print("Invalid choice")
