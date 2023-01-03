@@ -447,6 +447,7 @@ def make_userspace_message(trialcount=10000):
 
     params = {
         'v': '2020',
+        'save_draft': '1'
     }
 
     data = {
@@ -458,7 +459,9 @@ def make_userspace_message(trialcount=10000):
         'Post[body]':'',
     }
     data = data | subjects
+    
     r = requestssession.post(url=f"https://{host}.ope.ee/suhtlus/api/posts/edit?v=2020&save_draft=1", headers=headers, params=params, cookies=cookies, data=data)
+    # r = requestssession.post(url=f"https://{host}.ope.ee/suhtlus/api/posts/edit", headers=headers, params=params, cookies=cookies, data=data)
     rjson = r.json()
     with open("debug_json.json", "w") as f:
         json.dump(rjson, f)
@@ -468,6 +471,68 @@ def make_userspace_message(trialcount=10000):
 
     return id
 
+def get_message_data(id):
+
+
+    rjson = requestssession.get(url=f"https://{host}.ope.ee/suhtlus/api/posts/get/{id}?v=2020&output-format=json").json()
+    data = rjson["post"]
+    return data
+
+def delete_message(id):
+    headers = {
+        'Host': f'{host}.ope.ee',
+        'Sec-Ch-Ua': '" Not A;Brand";v="99", "Chromium";v="96"',
+        'Sec-Ch-Ua-Mobile': '?0',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Accept': '*/*',
+        'X-User-Token': get_xuid_token(),
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-App-Type': 'web',
+        'Sec-Ch-Ua-Platform': '"Linux"',
+        'Origin': f'https://{host}.ope.ee',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Dest': 'empty',
+        'Referer': f'https://{host}.ope.ee/suhtlus/p/new',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'en-US,en;q=0.9',
+    }
+
+    params = {
+        'v': '2020',
+    }
+
+    data = {
+        'Post[id]': id,
+        'Post[title]':'',
+        'Post[event_date]':'',
+        'Post[event_time]':'',
+        'Post[event_date_end]':'',
+        'Post[event_time_end]':'',
+        'Post[body]':'',
+        'Post[do_delete]':'1'
+    }
+    requestssession.get(url=f"https://{host}.ope.ee/suhtlus/api/posts/edit", headers=headers, params=params, cookies=cookies, data=data)
+
+def db_download(): # This is a management function, might be removed in the future for a more intuative workflow
+    testsize = 10000
+    sufficent = False
+    while not sufficent:
+        postid = make_userspace_message(trialcount=testsize)
+        data = get_message_data(postid)
+        if data["post_users_count"] + 2 >= testsize:
+            testsize *= 2
+            delete_message(id)
+        else:
+            sufficent = True
+    config["host"]["usercount"] = str(data["post_users_count"])
+    save_config_file()
+    userdata = data["post_membership_data_object"]["users"]
+    with open(cachepath + "namedata.json", "w") as f:
+        json.dump(userdata, f)
+        f.close()
+    delete_message(id)
 
 #################
 ### Main loop ###
@@ -578,6 +643,6 @@ Select choice: ''')
                         config["user"]["scraper"] = "False"
                     save_config_file()
                 elif submenu_choice == 11:
-                    print(make_userspace_message())
+                    db_download()
                 else:
                     print("Invalid choice")
