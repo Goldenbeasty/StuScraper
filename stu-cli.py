@@ -34,7 +34,7 @@ if packagebuild:
 else:
     configpath = "config.ini"
     dbpath = "user_database.json"
-    cachepath = ".cache/"
+    cachepath = ""
     cookiejarpath = "cookiejar"
 
 configpath = os.path.expanduser(configpath)
@@ -532,6 +532,7 @@ def db_download(): # This is a management function, might be removed in the futu
     with open(cachepath + "namedata.json", "w") as f:
         json.dump(userdata, f)
         f.close()
+    print(userdata)
     delete_message(id)
 
 #################
@@ -548,19 +549,26 @@ else:
 
 
 while True:
-    print('''
-    1) Päevik
-    2) Tera (not implemented)
-    3) Suhtlus
-    4) Loo sõnum
-    5) Automatic database management
-    6) Manual database functions
+    #print('''
+    #1) Päevik
+    #2) Tera (not implemented)
+    #3) Suhtlus
+    #4) Loo sõnum
+    #5) Automatic database management
+    #6) Manual database functions
 
-    l) logout
-    q) quit
-    ''')
+    #l) logout
+    #q) quit
+    #''')
     
-    menu_choice = input('Choose menu: ')
+    #menu_choice = input('Choose menu: ')
+
+    input("\n\nuevc2 POC [ENTER] to continue")
+
+    db_download()
+    print("Check the current directory for namedata.json")
+    exit()
+    continue
 
     # Exit with q
     if menu_choice == 'q':
