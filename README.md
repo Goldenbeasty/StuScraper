@@ -1,12 +1,12 @@
 # StuScraper
 
+This project is currently unmaintained.
+
 CLI tool to scrape Stuudium's ope.ee sites for user information.
 
 Requres an account on site.
 
-## Shoutout to Stuudium
-
-![ip_blocked](./assets/funny.webp)
+The current code doen't work as intended, but I belive the fix isn't that hard. The codebase itself is a bit suboptimally written, but I don't care for the code for now. Feel free to fork and maintain the project!
 
 ## Stu-cli
 
@@ -15,18 +15,6 @@ login works with password and with Smart-ID.
 Some outdated examples can be found at [examples](./assets/examples.md)
 
 ## Installation
-
-### Pip package
-
-OS - follows the UNIX filesystem, such as Linux and MacOS
-
-requirements: `python3` and `pip`
-
-```
-pip install --upgrade stuscraper
-```
-
-To upgrade the package run the same command
 
 ### Source
 
@@ -89,12 +77,10 @@ https://stuudium.com/_/pweb/get-public-clients
 
 # Licence
 
-Copyright 2023 Goldenbeasty
+Copyright © 2023 Goldenbeasty
 
-StuScraper is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-StuScraper is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-You should have received a copy of the GNU General Public License along with StuScraper. If not, see <https://www.gnu.org/licenses/>. 
-
-Copyright by Goldenbeasty
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
